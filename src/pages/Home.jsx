@@ -29,7 +29,7 @@ function Home({ servicios, articulos, casos, config }) {
   ];
 
   return (
-    <>
+    <PageWrapper config={config}>
       {/* HERO SECTION ORIGINAL */}
       <header className="relative pt-40 pb-24 px-6 bg-slate-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-50/50 rounded-bl-[10rem] -z-10 hidden lg:block"></div>
@@ -165,9 +165,8 @@ function Home({ servicios, articulos, casos, config }) {
           <img src={selectedImg} className="max-w-full max-h-[85vh] rounded-[2rem] shadow-2xl border-4 border-white/20 animate-in zoom-in-90 duration-300" />
         </div>
       )}
-    </>
+    </PageWrapper>
   );
-    </>
 }
 
 export default Home;
