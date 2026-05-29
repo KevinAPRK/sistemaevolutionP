@@ -1,7 +1,5 @@
-import React from 'react';
-import { Stethoscope, Award, ChevronRight } from 'lucide-react';
-
 import React, { useState } from 'react';
+import { Stethoscope, Award, ChevronRight } from 'lucide-react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 
