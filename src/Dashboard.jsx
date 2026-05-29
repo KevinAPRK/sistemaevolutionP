@@ -60,42 +60,62 @@ function Dashboard() {
   }, [navigate]);
 
   const fetchData = async () => {
-    const [resConsultas, resConfig, resCasos, resBlog, resTestimonios, resMedicos] = await Promise.all([
-      supabase.from('consultas').select('*').order('created_at', { ascending: false }),
-      supabase.from('configuracion').select('*').eq('id', 1).single(),
-      supabase.from('casos-clinicos').select('*').order('created_at', { ascending: false }),
-      supabase.from('blog').select('*').order('fecha', { ascending: false }),
-      supabase.from('testimonios').select('*').order('created_at', { ascending: false }),
-      supabase.from('medicos').select('*').order('created_at', { ascending: false })
-    ]);
+    try {
+      const [resConsultas, resConfig, resCasos, resBlog, resTestimonios, resMedicos] = await Promise.all([
+        supabase.from('consultas').select('*').order('created_at', { ascending: false }),
+        supabase.from('configuracion').select('*').eq('id', 1).single(),
+        supabase.from('casos-clinicos').select('*').order('created_at', { ascending: false }),
+        supabase.from('blog').select('*').order('fecha', { ascending: false }),
+        supabase.from('testimonios').select('*').order('created_at', { ascending: false }),
+        supabase.from('medicos').select('*').order('created_at', { ascending: false })
+      ]);
 
-    if (resConsultas.data) setConsultas(resConsultas.data);
-    if (resConfig.data) setConfig(resConfig.data);
-    if (resCasos.data) setCasos(resCasos.data);
-    if (resBlog.data) setArticulos(resBlog.data);
-    if (resTestimonios.data) setTestimonios(resTestimonios.data);
-    if (resMedicos.data) setMedicos(resMedicos.data);
-    
-    setIsLoading(false);
+      if (resConsultas.error) console.error('Error fetching consultas:', resConsultas.error);
+      if (resConsultas.data) setConsultas(resConsultas.data);
+
+      if (resConfig.error) console.error('Error fetching configuracion:', resConfig.error);
+      if (resConfig.data) setConfig(resConfig.data);
+
+      if (resCasos.error) console.error('Error fetching casos-clinicos:', resCasos.error);
+      if (resCasos.data) setCasos(resCasos.data);
+
+      if (resBlog.error) console.error('Error fetching blog:', resBlog.error);
+      if (resBlog.data) setArticulos(resBlog.data);
+
+      if (resTestimonios.error) console.error('Error fetching testimonios:', resTestimonios.error);
+      if (resTestimonios.data) setTestimonios(resTestimonios.data);
+
+      if (resMedicos.error) console.error('Error fetching medicos:', resMedicos.error);
+      if (resMedicos.data) setMedicos(resMedicos.data);
+
+      setIsLoading(false);
+    } catch (err) {
+      console.error('Error fetching dashboard data:', err);
+      setIsLoading(false);
+    }
   };
 
   const fetchMedicos = async () => {
-    const { data } = await supabase.from('medicos').select('*').order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('medicos').select('*').order('created_at', { ascending: false });
+    if (error) return console.error('fetchMedicos error:', error);
     if (data) setMedicos(data);
   };
 
   const fetchCasos = async () => {
-    const { data } = await supabase.from('casos-clinicos').select('*').order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('casos-clinicos').select('*').order('created_at', { ascending: false });
+    if (error) return console.error('fetchCasos error:', error);
     if (data) setCasos(data);
   };
 
   const fetchBlog = async () => {
-    const { data } = await supabase.from('blog').select('*').order('fecha', { ascending: false });
+    const { data, error } = await supabase.from('blog').select('*').order('fecha', { ascending: false });
+    if (error) return console.error('fetchBlog error:', error);
     if (data) setArticulos(data);
   };
 
   const fetchTestimonios = async () => {
-    const { data } = await supabase.from('testimonios').select('*').order('created_at', { ascending: false });
+    const { data, error } = await supabase.from('testimonios').select('*').order('created_at', { ascending: false });
+    if (error) return console.error('fetchTestimonios error:', error);
     if (data) setTestimonios(data);
   };
 

@@ -18,11 +18,15 @@ function Login() {
 
   // Detectar si el usuario viene desde el correo de recuperación
   useEffect(() => {
-    supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === "PASSWORD_RECOVERY") {
         setViewMode('update');
       }
     });
+
+    return () => {
+      subscription?.unsubscribe();
+    };
   }, []);
 
   // INICIAR SESIÓN
