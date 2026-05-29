@@ -3,12 +3,8 @@ import {
   ShieldCheck, Award, Stethoscope, ChevronRight, Star, ZoomIn, 
   ImageIcon, BookOpen, Send, Activity, Monitor, UserCheck, Heart, TrendingUp
 } from 'lucide-react';
-
-const iconMap = { Smile: Star, Activity, Zap: ShieldCheck, ShieldCheck, Stethoscope };
-
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
-import React, { useState } from 'react';
 
 function PageWrapper({ children, config }) {
   const [isScrolled, setIsScrolled] = useState(false);
