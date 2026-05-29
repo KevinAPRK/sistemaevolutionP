@@ -3,7 +3,6 @@ import { ZoomIn, ImageIcon } from 'lucide-react';
 
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
-import React, { useState } from 'react';
 
 function PageWrapper({ children }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -59,7 +58,8 @@ function CasosExito({ casos }) {
           <img src={selectedImg} className="max-w-full max-h-[85vh] rounded-[2rem] shadow-2xl border-4 border-white/20" alt="Caso ampliado" />
         </div>
       )}
-    </div>
+      </div>
+    </PageWrapper>
   );
 }
 
