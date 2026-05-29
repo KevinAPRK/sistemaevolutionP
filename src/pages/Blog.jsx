@@ -44,7 +44,8 @@ function Blog({ articulos }) {
           <div className="col-span-3 text-center text-[#414242] py-10 font-medium">No hay artículos publicados por el momento.</div>
         )}
       </section>
-    </div>
+      </div>
+    </PageWrapper>
   );
 }
 
