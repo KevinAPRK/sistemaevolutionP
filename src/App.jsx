@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from './lib/supabaseClient';
 import { 
   MessageCircle, Phone, Activity, Smile, ShieldCheck, Zap, 
@@ -135,30 +136,12 @@ function App() {
           </div>
 
           {/* Menú de Enlaces con Hover Dorado forzado */}
-          <div className="hidden lg:flex items-center gap-8 font-bold text-sm text-white">
-            
-            <div className="relative group py-4 cursor-pointer">
-              <span className="flex items-center gap-1 hover:text-[#dbac43] transition-colors duration-300">
-                Nosotros <ChevronDown size={14} className="text-[#c9c8c6] group-hover:text-[#dbac43] transition-colors"/>
-              </span>
-              <div className="absolute top-full left-0 mt-0 w-56 bg-[#414242] border border-[#c9c8c6]/20 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-2 group-hover:translate-y-0 overflow-hidden flex flex-col z-[90]">
-                <a href="#nosotros" className="px-5 py-3 text-white hover:bg-black hover:text-[#dbac43] transition-colors border-b border-[#c9c8c6]/10 last:border-0">Quiénes Somos</a>
-                <a href="#staff" className="px-5 py-3 text-white hover:bg-black hover:text-[#dbac43] transition-colors border-b border-[#c9c8c6]/10 last:border-0">Staff Médico</a>
-              </div>
+            <div className="hidden lg:flex items-center gap-8 font-bold text-sm text-white">
+              <Link to="/nosotros" className="text-white hover:text-[#dbac43] transition-colors duration-300 py-4">Nosotros</Link>
+              <Link to="/especialidades" className="text-white hover:text-[#dbac43] transition-colors duration-300 py-4">Especialidades</Link>
+              <Link to="/casos-de-exito" className="text-white hover:text-[#dbac43] transition-colors duration-300 py-4">Casos de Éxito</Link>
+              <Link to="/blog" className="text-white hover:text-[#dbac43] transition-colors duration-300 py-4">Blog</Link>
             </div>
-
-            <div className="relative group py-4 cursor-pointer">
-              <span className="flex items-center gap-1 hover:text-[#dbac43] transition-colors duration-300">
-                Especialidades <ChevronDown size={14} className="text-[#c9c8c6] group-hover:text-[#dbac43] transition-colors"/>
-              </span>
-              <div className="absolute top-full left-0 mt-0 w-56 bg-[#414242] border border-[#c9c8c6]/20 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-2 group-hover:translate-y-0 overflow-hidden flex flex-col z-[90]">
-                <a href="#servicios" className="px-5 py-3 text-white hover:bg-black hover:text-[#dbac43] transition-colors border-b border-[#c9c8c6]/10 last:border-0">Ver Especialidades</a>
-              </div>
-            </div>
-
-            <a href="#galeria" className="text-white hover:text-[#dbac43] transition-colors duration-300 py-4">Casos de Éxito</a>
-            <a href="#blog" className="text-white hover:text-[#dbac43] transition-colors duration-300 py-4">Blog</a>
-          </div>
 
           <div className="flex items-center gap-4">
             <button onClick={handleWhatsAppDirect} className="flex items-center gap-2 bg-[#dbac43] text-[#414242] px-6 py-2.5 rounded-full font-black text-sm hover:brightness-110 transition-all shadow-lg shadow-[#dbac43]/20"><Phone size={16} /> WhatsApp</button>
