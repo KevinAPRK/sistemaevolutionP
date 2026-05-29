@@ -40,5 +40,3 @@ export default function Nosotros() {
     </PageWrapper>
   );
 }
-
-export default Nosotros;
