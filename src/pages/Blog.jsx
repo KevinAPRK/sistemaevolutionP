@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BookOpen, ChevronRight } from 'lucide-react';
 
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
-import React, { useState } from 'react';
 
 function PageWrapper({ children }) {
   const [isScrolled, setIsScrolled] = useState(false);
