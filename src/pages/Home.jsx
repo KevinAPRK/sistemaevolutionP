@@ -6,6 +6,23 @@ import {
 
 const iconMap = { Smile: Star, Activity, Zap: ShieldCheck, ShieldCheck, Stethoscope };
 
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
+import React, { useState } from 'react';
+
+function PageWrapper({ children, config }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const handleWhatsAppDirect = () => window.open('https://wa.me/' + (config?.telefono || ''), '_blank');
+  return (
+    <div>
+      <Nav handleWhatsAppDirect={handleWhatsAppDirect} isScrolled={isScrolled} setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen} />
+      {children}
+      <Footer config={config} />
+    </div>
+  );
+}
+
 function Home({ servicios, articulos, casos, config }) {
   const [selectedImg, setSelectedImg] = useState(null);
 
@@ -154,6 +171,7 @@ function Home({ servicios, articulos, casos, config }) {
       )}
     </>
   );
+    </>
 }
 
 export default Home;

@@ -1,9 +1,27 @@
 import React from 'react';
 import { Stethoscope, Award, ChevronRight } from 'lucide-react';
 
+import React, { useState } from 'react';
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
+
+function PageWrapper({ children }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const handleWhatsAppDirect = () => window.open('https://wa.me/' + (''), '_blank');
+  return (
+    <div>
+      <Nav handleWhatsAppDirect={handleWhatsAppDirect} isScrolled={isScrolled} setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen} />
+      {children}
+      <Footer config={{}} />
+    </div>
+  );
+}
+
 function Especialidades({ servicios }) {
   return (
-    <div className="pt-32 pb-24 bg-slate-50 min-h-screen">
+    <PageWrapper>
+      <div className="pt-32 pb-24 bg-slate-50 min-h-screen">
       <section className="px-6 max-w-7xl mx-auto mb-20 text-center">
         <div className="inline-flex items-center gap-2 px-4 py-2 text-xs font-black text-blue-700 bg-blue-100/50 rounded-full uppercase tracking-widest mb-4">
           <Award size={14}/> Excelencia Odontológica
@@ -31,7 +49,8 @@ function Especialidades({ servicios }) {
           </div>
         ))}
       </section>
-    </div>
+      </div>
+    </PageWrapper>
   );
 }
 

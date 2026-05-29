@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import Nav from './components/Nav';
+import Footer from './components/Footer';
 import { supabase } from './lib/supabaseClient';
 import { 
   MessageCircle, Phone, Activity, Smile, ShieldCheck, Zap, 
@@ -11,51 +13,8 @@ import {
 
 const iconMap = { Smile, Activity, Zap, ShieldCheck, Stethoscope };
 
-function App() {
-  const [servicios, setServicios] = useState([]);
-  const [articulos, setArticulos] = useState([]);
-  const [casos, setCasos] = useState([]);
-  const [testimonios, setTestimonios] = useState([]);
-  const [medicos, setMedicos] = useState([]); 
-  const [selectedImg, setSelectedImg] = useState(null);
-  const [selectedArticle, setSelectedArticle] = useState(null);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [chatResponse, setChatResponse] = useState(null);
-  
-  const [formData, setFormData] = useState({ nombre: '', telefono: '', mensaje: '' });
-  const [isSending, setIsSending] = useState(false);
-
-  // Estado para controlar el cambio de color del Navbar al hacer Scroll
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  // Estados del Módulo de Testimonios
-  const [showReviewForm, setShowReviewForm] = useState(false);
-  const [showReviewToast, setShowReviewToast] = useState(false);
-  const [isSendingReview, setIsSendingReview] = useState(false);
-  const [newReview, setNewReview] = useState({ nombre: '', comentario: '', estrellas: 5 });
-
-  const [config, setConfig] = useState({
-    telefono: '51969826870',
-    email: 'evolutiondentalcenter@gmail.com',
-    direccion: 'Calle - Los Brillantes, Urb. Miraflores Mz N Lt. 12, Castilla, Piura',
-    horario_semana: '9:00 a.m. - 8:00 p.m.',
-    horario_sabado: '9:00 a.m. - 8:00 p.m.',
-    mensaje_bot: '¡Hola! Bienvenidos a Evolution Dental. ¿En qué podemos ayudarte hoy?'
-  });
-
-  const fetchTestimonios = async () => {
-    try {
-      const { data } = await supabase.from('testimonios').select('*').eq('aprobado', true).order('created_at', { ascending: false });
-      if (data) setTestimonios(data);
-    } catch (err) { console.error("Error cargando testimonios:", err); }
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 40) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
+      <Nav handleWhatsAppDirect={handleWhatsAppDirect} isScrolled={isScrolled} setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen} />
       }
     };
 
@@ -455,38 +414,7 @@ function App() {
         </div>
       )}
 
-      {/* FOOTER TOTALMENTE LIMPIO E INTEGRADO */}
-      <footer className="bg-[#414242] pt-20 pb-10 text-[#c9c8c6] border-t-8 border-[#dbac43]">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12 mb-16">
-          <div className="space-y-6">
-            
-            {/* LOGO CORPORATIVO TOTALMENTE ORIGINAL SIN FILTROS NI CONTENEDORES PARCHE */}
-            <img 
-              src="/logo.png" 
-              alt="Evolution Dental Center" 
-              className="h-16 w-auto object-contain" 
-            />
-            
-            <p className="font-medium max-w-sm leading-relaxed text-sm pt-2">Transformamos vidas a través de sonrisas saludables y estéticas en Piura.</p>
-          </div>
-          <div className="space-y-6">
-            <h5 className="font-black text-white uppercase tracking-widest text-xs">Menú</h5>
-            <ul className="space-y-3 font-medium text-sm">
-              <li><a href="#nosotros" className="hover:text-[#dbac43] transition-colors">Nosotros</a></li>
-              <li><a href="#servicios" className="hover:text-[#dbac43] transition-colors">Especialidades</a></li>
-              <li><a href="#galeria" className="hover:text-[#dbac43] transition-colors">Casos</a></li>
-              <li><a href="#blog" className="hover:text-[#dbac43] transition-colors">Blog</a></li>
-            </ul>
-          </div>
-          <div className="space-y-6">
-            <h5 className="font-black text-white uppercase tracking-widest text-xs">Contacto</h5>
-            <p className="font-medium text-sm">📞 +{config?.telefono || ''}</p>
-            <p className="font-medium text-sm">✉️ {config?.email || ''}</p>
-            <p className="font-medium text-sm flex items-start gap-3"><MapPin size={24} className="text-[#dbac43] shrink-0"/> {config?.direccion || ''}</p>
-          </div>
-        </div>
-        <div className="text-center border-t border-lightGray/20 pt-8 text-[#c9c8c6]/50 text-[10px] font-black uppercase tracking-[0.2em]">Todos los derechos reservados Clinica Evolution 2026, Desarrollado por Angello Portilla</div>
-      </footer>
+      <Footer config={config} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Importación de las vistas del proyecto
 import App from './App.jsx';
+import Home from './pages/Home.jsx';
 import Login from './Login.jsx';
 import Dashboard from './Dashboard.jsx';
 import Nosotros from './pages/Nosotros.jsx';
@@ -19,7 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Routes>
         {/* Ruta Pública: Landing Page de la clínica en Piura */}
-        <Route path="/" element={<App />} />
+        <Route path="/" element={<Home />} />
         <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/especialidades" element={<Especialidades />} />
         <Route path="/casos-de-exito" element={<CasosExito />} />

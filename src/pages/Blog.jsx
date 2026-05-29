@@ -1,9 +1,27 @@
 import React from 'react';
 import { BookOpen, ChevronRight } from 'lucide-react';
 
+import Nav from '../components/Nav';
+import Footer from '../components/Footer';
+import React, { useState } from 'react';
+
+function PageWrapper({ children }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const handleWhatsAppDirect = () => window.open('https://wa.me/' + (''), '_blank');
+  return (
+    <div>
+      <Nav handleWhatsAppDirect={handleWhatsAppDirect} isScrolled={isScrolled} setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen} />
+      {children}
+      <Footer config={{}} />
+    </div>
+  );
+}
+
 function Blog({ articulos }) {
   return (
-    <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
+    <PageWrapper>
+      <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
       <section className="flex justify-between items-end mb-12">
         <div>
           <h1 className="text-4xl font-black text-[#414242] mb-2">Novedades</h1>
