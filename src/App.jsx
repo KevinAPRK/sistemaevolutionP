@@ -13,12 +13,27 @@ import {
 
 const iconMap = { Smile, Activity, Zap, ShieldCheck, Stethoscope };
 
-  };
-      <Nav handleWhatsAppDirect={handleWhatsAppDirect} isScrolled={isScrolled} setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen} />
-      }
-    };
+function App() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [servicios, setServicios] = useState([]);
+  const [articulos, setArticulos] = useState([]);
+  const [casos, setCasos] = useState([]);
+  const [medicos, setMedicos] = useState([]);
+  const [config, setConfig] = useState(null);
+  const [testimonios, setTestimonios] = useState([]);
+  const [selectedImg, setSelectedImg] = useState(null);
+  const [selectedArticle, setSelectedArticle] = useState(null);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [newReview, setNewReview] = useState({ nombre: '', comentario: '', estrellas: 5 });
+  const [showReviewToast, setShowReviewToast] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [isSendingReview, setIsSendingReview] = useState(false);
+  const [formData, setFormData] = useState({ nombre: '', telefono: '', mensaje: '' });
+  const [chatResponse, setChatResponse] = useState(null);
 
-    window.addEventListener('scroll', handleScroll);
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
 
     const fetchData = async () => {
       try {
