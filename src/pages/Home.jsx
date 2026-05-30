@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
+import ChatbotPanel from '../components/ChatbotPanel';
 import { supabase } from '../lib/supabaseClient';
 
 function PageWrapper({ children, config }) {
@@ -15,6 +16,7 @@ function PageWrapper({ children, config }) {
     <div>
       <Nav handleWhatsAppDirect={handleWhatsAppDirect} isScrolled={isScrolled} setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen} />
       {children}
+      <ChatbotPanel config={config} isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
       <Footer config={config} />
     </div>
   );

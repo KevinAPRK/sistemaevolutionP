@@ -3,16 +3,19 @@ import { BookOpen, ChevronRight } from 'lucide-react';
 
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
+import ChatbotPanel from '../components/ChatbotPanel';
 import { supabase } from '../lib/supabaseClient';
 
 function PageWrapper({ children }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const config = {};
   const handleWhatsAppDirect = () => window.open('https://wa.me/' + (''), '_blank');
   return (
     <div>
       <Nav handleWhatsAppDirect={handleWhatsAppDirect} isScrolled={isScrolled} setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen} />
       {children}
+      <ChatbotPanel config={config} isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
       <Footer config={{}} />
     </div>
   );
