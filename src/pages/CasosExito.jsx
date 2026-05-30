@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ZoomIn, ImageIcon } from 'lucide-react';
 
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
+import { supabase } from '../lib/supabaseClient';
 
 function PageWrapper({ children }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -17,8 +18,27 @@ function PageWrapper({ children }) {
   );
 }
 
-function CasosExito({ casos }) {
+function CasosExito() {
   const [selectedImg, setSelectedImg] = useState(null);
+  const [casos, setCasos] = useState([]);
+
+  useEffect(() => {
+    const fetchCasos = async () => {
+      const { data, error } = await supabase
+        .from('casos-clinicos')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error loading casos-clinicos:', error);
+        return;
+      }
+
+      setCasos(data || []);
+    };
+
+    fetchCasos();
+  }, []);
 
   return (
     <PageWrapper>
