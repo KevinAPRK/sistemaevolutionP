@@ -8,9 +8,9 @@ export default function Nav({ handleWhatsAppDirect, isScrolled, setIsChatOpen, i
       isScrolled ? 'bg-black shadow-2xl py-4' : 'bg-[#414242] border-b border-[#c9c8c6]/10 py-6'
     }`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <div className="flex items-center cursor-pointer" onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}>
+        <Link to="/" className="flex items-center" aria-label="Volver a inicio">
           <img src="/logo.png" alt="Evolution Dental Center" className={`w-auto object-contain transition-all duration-500 ${isScrolled ? 'h-12 md:h-14' : 'h-16 md:h-22'}`} />
-        </div>
+        </Link>
 
         <div className="hidden lg:flex items-center gap-8 font-bold text-sm text-white">
           <Link to="/nosotros" className="text-white hover:text-[#dbac43] transition-colors duration-300 py-4">Nosotros</Link>
