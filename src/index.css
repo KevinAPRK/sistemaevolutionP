@@ -1,2 +1,16 @@
 
 @import "tailwindcss";
+
+@keyframes testimonials-marquee {
+	0% {
+		transform: translateX(0);
+	}
+
+	100% {
+		transform: translateX(-50%);
+	}
+}
+
+.testimonials-marquee {
+	animation: testimonials-marquee 40s linear infinite;
+}

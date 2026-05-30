@@ -213,22 +213,26 @@ function Home({ servicios, articulos, casos, config }) {
           <div className="w-20 h-1.5 bg-[#dbac43] mx-auto mt-6 rounded-full"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonios.length > 0 ? testimonios.map((t) => (
-            <div key={t.id} className="bg-white p-8 rounded-[2.5rem] shadow-lg border border-[#c9c8c6]/30 flex flex-col justify-between">
-              <div>
-                <div className="flex gap-1 mb-6 text-[#dbac43]">
-                  {[...Array(Math.max(0, Math.min(5, parseInt(t.estrellas) || 5)))].map((_, i) => (
-                    <Star key={i} fill="currentColor" size={18} />
-                  ))}
+        <div className="overflow-hidden relative">
+          <div className="testimonials-marquee flex w-max gap-8 py-2">
+            {(testimonios.length > 0 ? [...testimonios, ...testimonios] : []).length > 0 ? (
+              [...testimonios, ...testimonios].map((t, index) => (
+                <div key={`${t.id}-${index}`} className="bg-white p-8 rounded-[2.5rem] shadow-lg border border-[#c9c8c6]/30 flex flex-col justify-between w-[320px] sm:w-[360px] shrink-0">
+                  <div>
+                    <div className="flex gap-1 mb-6 text-[#dbac43]">
+                      {[...Array(Math.max(0, Math.min(5, parseInt(t.estrellas) || 5)))].map((_, i) => (
+                        <Star key={i} fill="currentColor" size={18} />
+                      ))}
+                    </div>
+                    <p className="text-[#414242]/80 font-medium leading-relaxed mb-8 italic">"{t.comentario}"</p>
+                  </div>
+                  <h4 className="font-black text-[#414242] uppercase text-xs tracking-wider border-t border-[#c9c8c6]/20 pt-4">👤 {t.nombre}</h4>
                 </div>
-                <p className="text-[#414242]/80 font-medium leading-relaxed mb-8 italic">"{t.comentario}"</p>
-              </div>
-              <h4 className="font-black text-[#414242] uppercase text-xs tracking-wider border-t border-[#c9c8c6]/20 pt-4">👤 {t.nombre}</h4>
-            </div>
-          )) : (
-            <div className="col-span-3 text-center text-slate-400 font-medium py-10">Déjanos tu opinión para aparecer aquí.</div>
-          )}
+              ))
+            ) : (
+              <div className="w-full text-center text-slate-400 font-medium py-10">Déjanos tu opinión para aparecer aquí.</div>
+            )}
+          </div>
         </div>
       </section>
 
