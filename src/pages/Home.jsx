@@ -61,12 +61,6 @@ function Home({ servicios, articulos, casos, config }) {
     fetchCasosYTestimonios();
   }, []);
 
-  const testimonios = [
-    { id: 1, nombre: 'María Fernanda L.', texto: 'Excelente atención, los doctores son muy amables.', rating: 5 },
-    { id: 2, nombre: 'Carlos Ruiz', texto: 'Me hice un diseño de sonrisa y quedó increíble.', rating: 5 },
-    { id: 3, nombre: 'Ana López', texto: 'Instalaciones modernas y de primera calidad.', rating: 5 }
-  ];
-
   return (
     <PageWrapper config={config}>
       {/* HERO SECTION ORIGINAL */}
