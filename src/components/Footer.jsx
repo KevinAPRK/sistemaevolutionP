@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapPin } from 'lucide-react';
+import { supabase } from '../lib/supabaseClient';
 
 export default function Footer({ config }) {
+  const [siteConfig, setSiteConfig] = useState(config || null);
+
+  useEffect(() => {
+    if (config) {
+      setSiteConfig(config);
+      return;
+    }
+
+    const fetchConfig = async () => {
+      const { data, error } = await supabase.from('configuracion').select('*').eq('id', 1).single();
+      if (error) {
+        console.error('Error loading configuracion:', error);
+        return;
+      }
+      setSiteConfig(data || null);
+    };
+
+    fetchConfig();
+  }, [config]);
+
   return (
     <footer className="bg-[#414242] pt-20 pb-10 text-[#c9c8c6] border-t-8 border-[#dbac43]">
       <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12 mb-16">
@@ -20,9 +41,9 @@ export default function Footer({ config }) {
         </div>
         <div className="space-y-6">
           <h5 className="font-black text-white uppercase tracking-widest text-xs">Contacto</h5>
-          <p className="font-medium text-sm">📞 +{config?.telefono || ''}</p>
-          <p className="font-medium text-sm">✉️ {config?.email || ''}</p>
-          <p className="font-medium text-sm flex items-start gap-3"><MapPin size={24} className="text-[#dbac43] shrink-0"/> {config?.direccion || ''}</p>
+          <p className="font-medium text-sm">📞 +{siteConfig?.telefono || ''}</p>
+          <p className="font-medium text-sm">✉️ {siteConfig?.email || ''}</p>
+          <p className="font-medium text-sm flex items-start gap-3"><MapPin size={24} className="text-[#dbac43] shrink-0"/> {siteConfig?.direccion || ''}</p>
         </div>
       </div>
       <div className="text-center border-t border-lightGray/20 pt-8 text-[#c9c8c6]/50 text-[10px] font-black uppercase tracking-[0.2em]">Todos los derechos reservados Clinica Evolution 2026, Desarrollado por Angello Portilla</div>
