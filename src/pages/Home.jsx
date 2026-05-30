@@ -34,7 +34,6 @@ function Home({ servicios, articulos, casos, config }) {
   const medicosCarousel = [...medicos, ...medicos];
   const casosCarousel = [...casosClinicos, ...casosClinicos];
   const testimoniosCarousel = [...testimonios, ...testimonios];
-  const blogCarousel = [...articulosBlog, ...articulosBlog];
 
   useEffect(() => {
     const fetchMedicos = async () => {
@@ -252,10 +251,9 @@ function Home({ servicios, articulos, casos, config }) {
           <div><h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Novedades</h3><p className="text-slate-400 font-bold mt-1 uppercase text-xs">Salud Bucal y Prevención</p></div>
           <BookOpen className="text-[#dbac43]/30 hidden md:block" size={60} />
         </div>
-        <div className="overflow-hidden px-4 md:px-10">
-          <div className="carousel-track carousel-track-blog flex w-max gap-8 py-2">
-          {blogCarousel?.filter(Boolean).length > 0 ? blogCarousel.map((art, index) => (
-            <div key={`${index}-${art.titulo || 'blog'}`} className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all cursor-pointer group flex flex-col h-full w-[360px] shrink-0">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {articulosBlog?.filter(Boolean).length > 0 ? articulosBlog.map((art, index) => (
+            <div key={`${index}-${art.titulo || 'blog'}`} className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all cursor-pointer group flex flex-col h-full">
               {art.imagen_url && <img src={art.imagen_url} className="w-full h-56 object-cover" />}
               <div className="p-10 flex flex-col flex-1">
                 <p className="text-[10px] font-black text-[#dbac43] uppercase tracking-widest mb-3">{art.fecha ? new Date(art.fecha).toLocaleDateString() : 'Novedad'}</p>
@@ -265,7 +263,6 @@ function Home({ servicios, articulos, casos, config }) {
               </div>
             </div>
           )) : <p className="col-span-3 text-center text-slate-400">Pronto nuevas noticias.</p>}
-          </div>
         </div>
       </section>
 
