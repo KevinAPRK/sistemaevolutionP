@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   ShieldCheck, Award, Stethoscope, ChevronRight, Star, ZoomIn, 
   ImageIcon, BookOpen, Send, Activity, Monitor, UserCheck, Heart, TrendingUp
 } from 'lucide-react';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
+import { supabase } from '../lib/supabaseClient';
 
 function PageWrapper({ children, config }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -21,6 +22,20 @@ function PageWrapper({ children, config }) {
 
 function Home({ servicios, articulos, casos, config }) {
   const [selectedImg, setSelectedImg] = useState(null);
+  const [medicos, setMedicos] = useState([]);
+
+  useEffect(() => {
+    const fetchMedicos = async () => {
+      const { data, error } = await supabase.from('medicos').select('*').order('created_at', { ascending: true });
+      if (error) {
+        console.error('Error loading medicos:', error);
+        return;
+      }
+      setMedicos(data || []);
+    };
+
+    fetchMedicos();
+  }, []);
 
   const testimonios = [
     { id: 1, nombre: 'María Fernanda L.', texto: 'Excelente atención, los doctores son muy amables.', rating: 5 },
@@ -96,6 +111,41 @@ function Home({ servicios, articulos, casos, config }) {
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* STAFF EN CARRUSEL */}
+      <section id="staff" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center mb-16">
+          <h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Nuestro Staff Médico</h3>
+          <p className="text-[#dbac43] font-bold mt-2 tracking-widest uppercase text-xs">Doctores y especialistas de Evolution Dental</p>
+          <div className="w-20 h-1.5 bg-[#dbac43] mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        <div className="overflow-x-auto pb-4 -mx-6 px-6">
+          <div className="flex gap-6 min-w-max snap-x snap-mandatory">
+            {medicos.length > 0 ? medicos.map((m) => (
+              <article key={m.id} className="snap-center shrink-0 w-[290px] sm:w-[340px] rounded-[3rem] overflow-hidden bg-[#414242] shadow-xl relative group">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  {m.imagen_url ? (
+                    <img src={m.imagen_url} alt={m.nombre} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-[#414242] text-[#dbac43]"><Stethoscope size={72} /></div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#414242] via-[#414242]/40 to-transparent"></div>
+                </div>
+                <div className="p-8 absolute bottom-0 left-0 w-full">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#dbac43]/10 text-[#dbac43] text-[10px] font-black uppercase tracking-widest mb-4">Staff</div>
+                  <h4 className="font-black text-2xl text-white leading-tight mb-2">{m.nombre}</h4>
+                  <p className="text-[#dbac43] font-black uppercase tracking-widest text-xs">{m.especialidad}</p>
+                </div>
+              </article>
+            )) : (
+              <div className="w-full py-10 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
+                Cargando el equipo de especialistas...
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
