@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Phone, ChevronDown, MessageCircle } from 'lucide-react';
+import { Phone, ChevronDown } from 'lucide-react';
 
 export default function Nav({ handleWhatsAppDirect, isScrolled, setIsChatOpen, isChatOpen }) {
   return (
@@ -21,7 +21,6 @@ export default function Nav({ handleWhatsAppDirect, isScrolled, setIsChatOpen, i
 
         <div className="flex items-center gap-4">
           <button onClick={handleWhatsAppDirect} className="flex items-center gap-2 bg-[#dbac43] text-[#414242] px-6 py-2.5 rounded-full font-black text-sm hover:brightness-110 transition-all shadow-lg shadow-[#dbac43]/20"><Phone size={16} /> WhatsApp</button>
-          <button onClick={() => setIsChatOpen(!isChatOpen)} className="bg-[#dbac43] text-[#414242] p-3 rounded-3xl shadow-2xl hover:scale-110 transition-transform"><MessageCircle size={20} /></button>
         </div>
       </div>
     </nav>
