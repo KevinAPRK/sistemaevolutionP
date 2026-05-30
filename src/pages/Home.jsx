@@ -25,6 +25,7 @@ function Home({ servicios, articulos, casos, config }) {
   const [medicos, setMedicos] = useState([]);
   const [casosClinicos, setCasosClinicos] = useState([]);
   const [testimonios, setTestimonios] = useState([]);
+  const [articulosBlog, setArticulosBlog] = useState([]);
   const phone = config?.telefono || '51969826870';
 
   useEffect(() => {
@@ -58,7 +59,17 @@ function Home({ servicios, articulos, casos, config }) {
       }
     };
 
+    const fetchBlog = async () => {
+      const { data, error } = await supabase.from('blog').select('*').order('fecha', { ascending: false });
+      if (error) {
+        console.error('Error loading blog:', error);
+        return;
+      }
+      setArticulosBlog(data || []);
+    };
+
     fetchCasosYTestimonios();
+    fetchBlog();
   }, []);
 
   return (
@@ -226,11 +237,11 @@ function Home({ servicios, articulos, casos, config }) {
           <BookOpen className="text-[#dbac43]/30 hidden md:block" size={60} />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articulos?.filter(Boolean).length > 0 ? articulos.map((art, index) => (
+          {articulosBlog?.filter(Boolean).length > 0 ? articulosBlog.map((art, index) => (
             <div key={index} className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all cursor-pointer group flex flex-col h-full">
               {art.imagen_url && <img src={art.imagen_url} className="w-full h-56 object-cover" />}
               <div className="p-10 flex flex-col flex-1">
-                <p className="text-[10px] font-black text-[#dbac43] uppercase tracking-widest mb-3">{new Date(art.fecha).toLocaleDateString()}</p>
+                <p className="text-[10px] font-black text-[#dbac43] uppercase tracking-widest mb-3">{art.fecha ? new Date(art.fecha).toLocaleDateString() : 'Novedad'}</p>
                 <h4 className="font-black text-2xl mb-4 text-slate-800 leading-tight">{art.titulo}</h4>
                 <p className="text-slate-500 text-sm line-clamp-3 mb-8">{art.resumen}</p>
                 <div className="flex items-center text-[#dbac43] font-black text-xs uppercase tracking-widest gap-2">LEER MÁS <ChevronRight size={18} /></div>

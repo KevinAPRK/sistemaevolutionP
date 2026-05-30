@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BookOpen, ChevronRight } from 'lucide-react';
 
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
+import { supabase } from '../lib/supabaseClient';
 
 function PageWrapper({ children }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -17,7 +18,22 @@ function PageWrapper({ children }) {
   );
 }
 
-function Blog({ articulos }) {
+function Blog() {
+  const [articulos, setArticulos] = useState([]);
+
+  useEffect(() => {
+    const fetchBlog = async () => {
+      const { data, error } = await supabase.from('blog').select('*').order('fecha', { ascending: false });
+      if (error) {
+        console.error('Error loading blog:', error);
+        return;
+      }
+      setArticulos(data || []);
+    };
+
+    fetchBlog();
+  }, []);
+
   return (
     <PageWrapper>
       <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
