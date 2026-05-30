@@ -35,5 +35,6 @@ export default function ChatbotPanel({ config, isChatOpen, setIsChatOpen }) {
           )}
         </div>
       </div>
+    </div>
   );
 }
