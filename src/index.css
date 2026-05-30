@@ -1,7 +1,7 @@
 
 @import "tailwindcss";
 
-@keyframes testimonials-marquee {
+@keyframes horizontal-marquee {
 	0% {
 		transform: translateX(0);
 	}
@@ -11,6 +11,26 @@
 	}
 }
 
-.testimonials-marquee {
-	animation: testimonials-marquee 40s linear infinite;
+.carousel-track {
+	will-change: transform;
+}
+
+.carousel-track-services,
+.carousel-track-staff,
+.carousel-track-cases,
+.carousel-track-testimonials,
+.carousel-track-blog {
+	animation: horizontal-marquee 55s linear infinite;
+}
+
+.carousel-track-cases {
+	animation-duration: 65s;
+}
+
+.carousel-track-blog {
+	animation-duration: 60s;
+}
+
+.carousel-track:hover {
+	animation-play-state: paused;
 }

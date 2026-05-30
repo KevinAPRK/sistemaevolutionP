@@ -29,6 +29,12 @@ function Home({ servicios, articulos, casos, config }) {
   const [testimonios, setTestimonios] = useState([]);
   const [articulosBlog, setArticulosBlog] = useState([]);
   const phone = config?.telefono || '51969826870';
+  const serviciosBase = servicios?.filter(Boolean).length > 0 ? servicios : ['Estética Dental', 'Periodoncia', 'Implantes', 'Ortodoncia'];
+  const serviciosCarousel = [...serviciosBase, ...serviciosBase];
+  const medicosCarousel = [...medicos, ...medicos];
+  const casosCarousel = [...casosClinicos, ...casosClinicos];
+  const testimoniosCarousel = [...testimonios, ...testimonios];
+  const blogCarousel = [...articulosBlog, ...articulosBlog];
 
   useEffect(() => {
     const fetchMedicos = async () => {
@@ -130,11 +136,12 @@ function Home({ servicios, articulos, casos, config }) {
           <h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Nuestros Servicios</h3>
           <div className="w-20 h-1.5 bg-[#dbac43] mx-auto mt-6 rounded-full"></div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 md:px-10">
-          {(servicios?.filter(Boolean).length > 0 ? servicios : ['Estética Dental', 'Periodoncia', 'Implantes', 'Ortodoncia']).map((s, index) => {
+        <div className="overflow-hidden px-4 md:px-10">
+          <div className="carousel-track carousel-track-services flex w-max gap-8 py-2">
+          {serviciosCarousel.map((s, index) => {
             const isReal = typeof s === 'object';
             return (
-              <div key={index} className="bg-slate-50 p-10 rounded-[3rem] hover:bg-white hover:shadow-2xl transition-all duration-500 group border border-transparent hover:border-[#dbac43]/10 flex flex-col h-full">
+              <div key={`${index}-${isReal ? s.nombre : s}`} className="bg-slate-50 p-10 rounded-[3rem] hover:bg-white hover:shadow-2xl transition-all duration-500 group border border-transparent hover:border-[#dbac43]/10 flex flex-col h-full w-[320px] shrink-0">
                 <div className="bg-white w-16 h-16 rounded-2xl flex items-center justify-center text-[#dbac43] mb-8 shadow-sm group-hover:bg-[#dbac43] group-hover:text-white transition-all"><Stethoscope size={32} /></div>
                 <h4 className="font-black text-2xl mb-4 text-slate-800">{isReal ? s.nombre : s}</h4>
                 <p className="text-slate-500 text-sm leading-relaxed font-medium flex-1">{isReal ? s.descripcion : 'Tratamiento especializado con tecnología avanzada.'}</p>
@@ -142,6 +149,7 @@ function Home({ servicios, articulos, casos, config }) {
               </div>
             );
           })}
+          </div>
         </div>
       </section>
 
@@ -153,10 +161,10 @@ function Home({ servicios, articulos, casos, config }) {
           <div className="w-20 h-1.5 bg-[#dbac43] mx-auto mt-6 rounded-full"></div>
         </div>
 
-        <div className="overflow-x-auto pb-4 -mx-6 px-6">
-          <div className="flex gap-6 min-w-max snap-x snap-mandatory">
-            {medicos.length > 0 ? medicos.map((m) => (
-              <article key={m.id} className="snap-center shrink-0 w-[290px] sm:w-[340px] rounded-[3rem] overflow-hidden bg-[#414242] shadow-xl relative group">
+        <div className="overflow-hidden pb-4 -mx-6 px-6">
+          <div className="carousel-track carousel-track-staff flex w-max gap-6 py-2">
+            {medicosCarousel.length > 0 ? medicosCarousel.map((m, index) => (
+              <article key={`${m.id || index}-${index}`} className="shrink-0 w-[290px] sm:w-[340px] rounded-[3rem] overflow-hidden bg-[#414242] shadow-xl relative group">
                 <div className="relative aspect-[4/5] overflow-hidden">
                   {m.imagen_url ? (
                     <img src={m.imagen_url} alt={m.nombre} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -186,9 +194,10 @@ function Home({ servicios, articulos, casos, config }) {
           <h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Casos Clínicos de Éxito</h3>
           <p className="text-[#dbac43] font-bold mt-2 tracking-widest uppercase text-xs">Transformaciones reales gestionadas desde el panel</p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {casosClinicos?.filter(Boolean).length > 0 ? casosClinicos.map((caso, index) => (
-            <div key={index} className="bg-white p-6 rounded-[3.5rem] shadow-xl border border-slate-100">
+        <div className="overflow-hidden px-4 md:px-10">
+          <div className="carousel-track carousel-track-cases flex w-max gap-8 py-2">
+          {casosCarousel?.filter(Boolean).length > 0 ? casosCarousel.map((caso, index) => (
+            <div key={`${index}-${caso.titulo || 'caso'}`} className="bg-white p-6 rounded-[3.5rem] shadow-xl border border-slate-100 shrink-0 w-[420px]">
               <p className="text-center font-black text-[#dbac43] uppercase tracking-[0.2em] text-sm mb-6 bg-[#dbac43]/10 py-3 rounded-2xl">{caso.titulo}</p>
               <div className="grid grid-cols-2 gap-6">
                 <div className="relative group cursor-pointer overflow-hidden rounded-[2rem]" onClick={() => setSelectedImg(caso.antes)}>
@@ -202,6 +211,7 @@ function Home({ servicios, articulos, casos, config }) {
               </div>
             </div>
           )) : <p className="col-span-2 text-center text-slate-400">No hay casos publicados.</p>}
+          </div>
         </div>
       </section>
 
@@ -214,9 +224,9 @@ function Home({ servicios, articulos, casos, config }) {
         </div>
 
         <div className="overflow-hidden relative">
-          <div className="testimonials-marquee flex w-max gap-8 py-2">
-            {(testimonios.length > 0 ? [...testimonios, ...testimonios] : []).length > 0 ? (
-              [...testimonios, ...testimonios].map((t, index) => (
+          <div className="carousel-track carousel-track-testimonials flex w-max gap-8 py-2">
+            {testimoniosCarousel.length > 0 ? (
+              testimoniosCarousel.map((t, index) => (
                 <div key={`${t.id}-${index}`} className="bg-white p-8 rounded-[2.5rem] shadow-lg border border-[#c9c8c6]/30 flex flex-col justify-between w-[320px] sm:w-[360px] shrink-0">
                   <div>
                     <div className="flex gap-1 mb-6 text-[#dbac43]">
@@ -242,9 +252,10 @@ function Home({ servicios, articulos, casos, config }) {
           <div><h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Novedades</h3><p className="text-slate-400 font-bold mt-1 uppercase text-xs">Salud Bucal y Prevención</p></div>
           <BookOpen className="text-[#dbac43]/30 hidden md:block" size={60} />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {articulosBlog?.filter(Boolean).length > 0 ? articulosBlog.map((art, index) => (
-            <div key={index} className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all cursor-pointer group flex flex-col h-full">
+        <div className="overflow-hidden px-4 md:px-10">
+          <div className="carousel-track carousel-track-blog flex w-max gap-8 py-2">
+          {blogCarousel?.filter(Boolean).length > 0 ? blogCarousel.map((art, index) => (
+            <div key={`${index}-${art.titulo || 'blog'}`} className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all cursor-pointer group flex flex-col h-full w-[360px] shrink-0">
               {art.imagen_url && <img src={art.imagen_url} className="w-full h-56 object-cover" />}
               <div className="p-10 flex flex-col flex-1">
                 <p className="text-[10px] font-black text-[#dbac43] uppercase tracking-widest mb-3">{art.fecha ? new Date(art.fecha).toLocaleDateString() : 'Novedad'}</p>
@@ -254,6 +265,7 @@ function Home({ servicios, articulos, casos, config }) {
               </div>
             </div>
           )) : <p className="col-span-3 text-center text-slate-400">Pronto nuevas noticias.</p>}
+          </div>
         </div>
       </section>
 
