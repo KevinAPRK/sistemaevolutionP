@@ -23,6 +23,9 @@ function PageWrapper({ children, config }) {
 function Home({ servicios, articulos, casos, config }) {
   const [selectedImg, setSelectedImg] = useState(null);
   const [medicos, setMedicos] = useState([]);
+  const [casosClinicos, setCasosClinicos] = useState([]);
+  const [testimonios, setTestimonios] = useState([]);
+  const phone = config?.telefono || '51969826870';
 
   useEffect(() => {
     const fetchMedicos = async () => {
@@ -35,6 +38,27 @@ function Home({ servicios, articulos, casos, config }) {
     };
 
     fetchMedicos();
+
+    const fetchCasosYTestimonios = async () => {
+      const [{ data: casosData, error: casosError }, { data: testimoniosData, error: testimoniosError }] = await Promise.all([
+        supabase.from('casos-clinicos').select('*').order('created_at', { ascending: false }),
+        supabase.from('testimonios').select('*').order('created_at', { ascending: false })
+      ]);
+
+      if (casosError) {
+        console.error('Error loading casos-clinicos:', casosError);
+      } else {
+        setCasosClinicos(casosData || []);
+      }
+
+      if (testimoniosError) {
+        console.error('Error loading testimonios:', testimoniosError);
+      } else {
+        setTestimonios((testimoniosData || []).filter((t) => t.aprobado !== false));
+      }
+    };
+
+    fetchCasosYTestimonios();
   }, []);
 
   const testimonios = [
@@ -60,7 +84,7 @@ function Home({ servicios, articulos, casos, config }) {
               Tecnología de última generación, experiencia clínica y bioseguridad en cada tratamiento.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
-              <button onClick={() => window.open(`https://wa.me/${config.telefono}`, '_blank')} className="w-full sm:w-auto bg-slate-900 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:bg-slate-800 transition-all">LLÁMANOS</button>
+              <button onClick={() => window.open(`https://wa.me/${phone}`, '_blank')} className="w-full sm:w-auto bg-slate-900 text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:bg-slate-800 transition-all">LLÁMANOS</button>
               <a href="#reserva" className="w-full sm:w-auto bg-[#dbac43] text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:bg-[#dbac43] transition-all shadow-[#dbac43]/20 text-center block">AGENDA TU CITA</a>
             </div>
           </div>
@@ -71,7 +95,7 @@ function Home({ servicios, articulos, casos, config }) {
               <input type="text" placeholder="Nombre completo" className="w-full p-4 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-100 outline-none transition-all font-medium" />
               <input type="tel" placeholder="Número de Teléfono" className="w-full p-4 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-100 outline-none transition-all font-medium" />
               <textarea rows="3" placeholder="¿En qué podemos ayudarte?" className="w-full p-4 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-100 outline-none transition-all font-medium resize-none"></textarea>
-              <button onClick={() => window.open(`https://wa.me/${config.telefono}`, '_blank')} className="w-full bg-[#dbac43] text-white py-5 rounded-2xl font-black shadow-xl hover:bg-[#dbac43] transition-all">SOLICITAR CITA</button>
+              <button onClick={() => window.open(`https://wa.me/${phone}`, '_blank')} className="w-full bg-[#dbac43] text-white py-5 rounded-2xl font-black shadow-xl hover:bg-[#dbac43] transition-all">SOLICITAR CITA</button>
             </div>
           </div>
         </div>
@@ -156,7 +180,7 @@ function Home({ servicios, articulos, casos, config }) {
           <p className="text-[#dbac43] font-bold mt-2 tracking-widest uppercase text-xs">Transformaciones reales gestionadas desde el panel</p>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {casos?.filter(Boolean).length > 0 ? casos.map((caso, index) => (
+          {casosClinicos?.filter(Boolean).length > 0 ? casosClinicos.map((caso, index) => (
             <div key={index} className="bg-white p-6 rounded-[3.5rem] shadow-xl border border-slate-100">
               <p className="text-center font-black text-[#dbac43] uppercase tracking-[0.2em] text-sm mb-6 bg-[#dbac43]/10 py-3 rounded-2xl">{caso.titulo}</p>
               <div className="grid grid-cols-2 gap-6">
@@ -171,6 +195,33 @@ function Home({ servicios, articulos, casos, config }) {
               </div>
             </div>
           )) : <p className="col-span-2 text-center text-slate-400">No hay casos publicados.</p>}
+        </div>
+      </section>
+
+      {/* COMENTARIOS DE PACIENTES */}
+      <section id="comentarios" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+        <div className="text-center mb-16">
+          <h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Comentarios de Pacientes</h3>
+          <p className="text-[#dbac43] font-bold mt-2 tracking-widest uppercase text-xs">Opiniones publicadas desde la base de datos</p>
+          <div className="w-20 h-1.5 bg-[#dbac43] mx-auto mt-6 rounded-full"></div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonios.length > 0 ? testimonios.map((t) => (
+            <div key={t.id} className="bg-white p-8 rounded-[2.5rem] shadow-lg border border-[#c9c8c6]/30 flex flex-col justify-between">
+              <div>
+                <div className="flex gap-1 mb-6 text-[#dbac43]">
+                  {[...Array(Math.max(0, Math.min(5, parseInt(t.estrellas) || 5)))].map((_, i) => (
+                    <Star key={i} fill="currentColor" size={18} />
+                  ))}
+                </div>
+                <p className="text-[#414242]/80 font-medium leading-relaxed mb-8 italic">"{t.comentario}"</p>
+              </div>
+              <h4 className="font-black text-[#414242] uppercase text-xs tracking-wider border-t border-[#c9c8c6]/20 pt-4">👤 {t.nombre}</h4>
+            </div>
+          )) : (
+            <div className="col-span-3 text-center text-slate-400 font-medium py-10">Déjanos tu opinión para aparecer aquí.</div>
+          )}
         </div>
       </section>
 
@@ -203,7 +254,7 @@ function Home({ servicios, articulos, casos, config }) {
             <input type="text" placeholder="Nombre completo" className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium" />
             <input type="tel" placeholder="Celular" className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium" />
             <textarea placeholder="¿Interesado en algún tratamiento?" rows="4" className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium md:col-span-2"></textarea>
-            <button onClick={() => window.open(`https://wa.me/${config.telefono}`, '_blank')} className="w-full md:col-span-2 bg-[#dbac43] text-white py-6 rounded-2xl font-black shadow-2xl hover:bg-[#dbac43] flex justify-center items-center gap-3">ENVIAR POR WHATSAPP <Send size={20}/></button>
+            <button onClick={() => window.open(`https://wa.me/${phone}`, '_blank')} className="w-full md:col-span-2 bg-[#dbac43] text-white py-6 rounded-2xl font-black shadow-2xl hover:bg-[#dbac43] flex justify-center items-center gap-3">ENVIAR POR WHATSAPP <Send size={20}/></button>
           </div>
         </div>
         <div className="max-w-4xl mx-auto text-center"><h2 className="text-2xl font-black text-slate-800 uppercase tracking-tighter mb-4 text-[#dbac43]">Evolution Dental Center</h2><p className="text-slate-500 font-medium italic">"Los mejores dentistas especialistas en salud y estética bucal en Piura."</p></div>
