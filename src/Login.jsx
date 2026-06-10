@@ -8,6 +8,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
   const [successMsg, setSuccessMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -15,6 +16,29 @@ function Login() {
   const [viewMode, setViewMode] = useState('login'); 
   
   const navigate = useNavigate();
+
+  const validateLogin = () => {
+    const nextErrors = {};
+    if (!email.trim()) nextErrors.email = 'Debes completar el correo electrónico.';
+    if (!password.trim()) nextErrors.password = 'Debes completar la contraseña.';
+    setFieldErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const validateReset = () => {
+    const nextErrors = {};
+    if (!email.trim()) nextErrors.email = 'Debes ingresar tu correo de administración.';
+    setFieldErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const validateUpdate = () => {
+    const nextErrors = {};
+    if (!newPassword.trim()) nextErrors.newPassword = 'Debes escribir la nueva contraseña.';
+    if (newPassword.trim() && newPassword.trim().length < 6) nextErrors.newPassword = 'La contraseña debe tener al menos 6 caracteres.';
+    setFieldErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
 
   // Detectar si el usuario viene desde el correo de recuperación
   useEffect(() => {
@@ -32,6 +56,7 @@ function Login() {
   // INICIAR SESIÓN
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!validateLogin()) return;
     setIsLoading(true);
     setError(null);
     setSuccessMsg(null);
@@ -50,6 +75,7 @@ function Login() {
   // SOLICITAR RECUPERACIÓN DE CONTRASEÑA
   const handlePasswordResetRequest = async (e) => {
     e.preventDefault();
+    if (!validateReset()) return;
     setIsLoading(true);
     setError(null);
     setSuccessMsg(null);
@@ -71,6 +97,7 @@ function Login() {
   // ACTUALIZAR A LA NUEVA CONTRASEÑA
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
+    if (!validateUpdate()) return;
     setIsLoading(true);
     setError(null);
     setSuccessMsg(null);
@@ -154,7 +181,7 @@ function Login() {
 
           {/* MODO FORMULARIO: LOGIN */}
           {viewMode === 'login' && (
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-6" noValidate>
               <div className="space-y-2 text-center">
                 <label className="text-[10px] font-black text-[#414242]/60 uppercase tracking-widest block">Correo Electrónico</label>
                 <div className="relative">
@@ -163,10 +190,11 @@ function Login() {
                     type="email" 
                     required 
                     placeholder="admin@evolutiondental.com" 
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl border-none ring-1 ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#414242] outline-none bg-[#fafafa] font-medium text-sm text-center transition-all shadow-sm" 
-                    onChange={(e) => setEmail(e.target.value)} 
+                    className={`w-full pl-12 pr-4 py-4 rounded-2xl border-none outline-none bg-[#fafafa] font-medium text-sm text-center transition-all shadow-sm ring-1 ${fieldErrors.email ? 'ring-red-400 focus:ring-2 focus:ring-red-500' : 'ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#414242]'}`} 
+                    onChange={(e) => { setEmail(e.target.value); if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: '' })); }} 
                   />
                 </div>
+                {fieldErrors.email && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest text-left">{fieldErrors.email}</p>}
               </div>
               
               <div className="space-y-2 text-center">
@@ -177,10 +205,11 @@ function Login() {
                     type="password" 
                     required 
                     placeholder="••••••••" 
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl border-none ring-1 ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#414242] outline-none bg-[#fafafa] font-medium text-sm text-center transition-all shadow-sm" 
-                    onChange={(e) => setPassword(e.target.value)} 
+                    className={`w-full pl-12 pr-4 py-4 rounded-2xl border-none outline-none bg-[#fafafa] font-medium text-sm text-center transition-all shadow-sm ring-1 ${fieldErrors.password ? 'ring-red-400 focus:ring-2 focus:ring-red-500' : 'ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#414242]'}`} 
+                    onChange={(e) => { setPassword(e.target.value); if (fieldErrors.password) setFieldErrors((prev) => ({ ...prev, password: '' })); }} 
                   />
                 </div>
+                {fieldErrors.password && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest text-left">{fieldErrors.password}</p>}
               </div>
 
               <button 
@@ -207,7 +236,7 @@ function Login() {
 
           {/* MODO FORMULARIO: SOLICITAR ENLACE */}
           {viewMode === 'reset' && (
-            <form onSubmit={handlePasswordResetRequest} className="space-y-6">
+            <form onSubmit={handlePasswordResetRequest} className="space-y-6" noValidate>
               <div className="space-y-2 text-center">
                 <label className="text-[10px] font-black text-[#414242]/60 uppercase tracking-widest block">Correo de Administración</label>
                 <div className="relative">
@@ -216,10 +245,11 @@ function Login() {
                     type="email" 
                     required 
                     placeholder="Ingresa tu correo" 
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl border-none ring-1 ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#414242] outline-none bg-[#fafafa] font-medium text-sm text-center transition-all shadow-sm" 
-                    onChange={(e) => setEmail(e.target.value)} 
+                    className={`w-full pl-12 pr-4 py-4 rounded-2xl border-none outline-none bg-[#fafafa] font-medium text-sm text-center transition-all shadow-sm ring-1 ${fieldErrors.email ? 'ring-red-400 focus:ring-2 focus:ring-red-500' : 'ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#414242]'}`} 
+                    onChange={(e) => { setEmail(e.target.value); if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: '' })); }} 
                   />
                 </div>
+                {fieldErrors.email && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest text-left">{fieldErrors.email}</p>}
               </div>
 
               <button 
@@ -246,7 +276,7 @@ function Login() {
 
           {/* MODO FORMULARIO: ACTUALIZAR CLAVE */}
           {viewMode === 'update' && (
-            <form onSubmit={handleUpdatePassword} className="space-y-6">
+            <form onSubmit={handleUpdatePassword} className="space-y-6" noValidate>
               <div className="space-y-2 text-center">
                 <label className="text-[10px] font-black text-[#414242]/60 uppercase tracking-widest block">Nueva Contraseña</label>
                 <div className="relative">
@@ -255,10 +285,11 @@ function Login() {
                     type="password" 
                     required 
                     placeholder="Mínimo 6 caracteres" 
-                    className="w-full pl-12 pr-4 py-4 rounded-2xl border-none ring-1 ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#414242] outline-none bg-[#fafafa] font-medium text-sm text-center transition-all shadow-sm" 
-                    onChange={(e) => setNewPassword(e.target.value)} 
+                    className={`w-full pl-12 pr-4 py-4 rounded-2xl border-none outline-none bg-[#fafafa] font-medium text-sm text-center transition-all shadow-sm ring-1 ${fieldErrors.newPassword ? 'ring-red-400 focus:ring-2 focus:ring-red-500' : 'ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#414242]'}`} 
+                    onChange={(e) => { setNewPassword(e.target.value); if (fieldErrors.newPassword) setFieldErrors((prev) => ({ ...prev, newPassword: '' })); }} 
                   />
                 </div>
+                {fieldErrors.newPassword && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest text-left">{fieldErrors.newPassword}</p>}
               </div>
 
               <button 

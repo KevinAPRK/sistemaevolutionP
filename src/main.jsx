@@ -11,6 +11,7 @@ import Nosotros from './pages/Nosotros.jsx';
 import Especialidades from './pages/Especialidades.jsx';
 import CasosExito from './pages/CasosExito.jsx';
 import Blog from './pages/Blog.jsx';
+import BlogPost from './pages/BlogPost.jsx';
 
 // Importación de estilos globales (Tailwind CSS)
 import './index.css';
@@ -25,6 +26,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/especialidades" element={<Especialidades />} />
         <Route path="/casos-de-exito" element={<CasosExito />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:id" element={<BlogPost />} />
         
         {/* Rutas Privadas y de Autenticación */}
         <Route path="/login" element={<Login />} />

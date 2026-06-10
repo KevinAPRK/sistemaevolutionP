@@ -29,7 +29,7 @@ function App() {
   const [showReviewToast, setShowReviewToast] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [isSendingReview, setIsSendingReview] = useState(false);
-  const [formData, setFormData] = useState({ nombre: '', telefono: '', mensaje: '' });
+  const [formData, setFormData] = useState({ nombre: '', telefono: '', servicio: '' });
   const [chatResponse, setChatResponse] = useState(null);
 
   useEffect(() => {
@@ -69,11 +69,20 @@ function App() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setIsSending(true);
-    const { error } = await supabase.from('consultas').insert([formData]);
+    const payload = {
+      nombre: formData.nombre,
+      telefono: formData.telefono,
+      mensaje: formData.servicio,
+    };
+    const { error } = await supabase.from('consultas').insert([payload]);
     if (!error) {
       const phone = config?.telefono || '51969826870';
-      window.open(`https://wa.me/${phone}?text=Hola, mi nombre es ${formData.nombre}. Consulta: ${formData.mensaje}`, '_blank');
-      setFormData({ nombre: '', telefono: '', mensaje: '' });
+      const whatsappMessage = `Hola Evolution Dental, deseo agendar una cita.%0A%0ANombre del paciente: ${formData.nombre}%0AServicio interesado: ${formData.servicio}`;
+      window.open(`https://wa.me/${phone}?text=${whatsappMessage}`, '_blank');
+      setFormData({ nombre: '', telefono: '', servicio: '' });
+    } else {
+      console.error('Error guardando consulta:', error);
+      alert('No se pudo guardar la consulta en la base de datos. Revisa la conexión o los permisos de Supabase.');
     }
     setIsSending(false);
   };
@@ -143,7 +152,7 @@ function App() {
             <form onSubmit={handleFormSubmit} className="space-y-5">
               <input type="text" placeholder="Nombre completo" required className="w-full p-4 rounded-2xl bg-[#fafafa] border-none ring-1 ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#dbac43] outline-none transition-all font-medium" onChange={(e)=>setFormData({...formData, nombre: e.target.value})} value={formData.nombre} />
               <input type="tel" placeholder="Número de Teléfono" required className="w-full p-4 rounded-2xl bg-[#fafafa] border-none ring-1 ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#dbac43] outline-none transition-all font-medium" onChange={(e)=>setFormData({...formData, telefono: e.target.value})} value={formData.telefono} />
-              <textarea rows="3" required placeholder="¿En qué podemos ayudarte?" className="w-full p-4 rounded-2xl bg-[#fafafa] border-none ring-1 ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#dbac43] outline-none transition-all font-medium resize-none" onChange={(e)=>setFormData({...formData, mensaje: e.target.value})} value={formData.mensaje}></textarea>
+              <textarea rows="3" required placeholder="Servicio interesado, por ejemplo: ortodoncia, implantes, limpieza dental" className="w-full p-4 rounded-2xl bg-[#fafafa] border-none ring-1 ring-[#c9c8c6]/50 focus:ring-2 focus:ring-[#dbac43] outline-none transition-all font-medium resize-none" onChange={(e)=>setFormData({...formData, servicio: e.target.value})} value={formData.servicio}></textarea>
               <button type="submit" disabled={isSending} className="w-full bg-[#dbac43] text-[#414242] py-5 rounded-2xl font-black shadow-xl hover:brightness-105 transition-all active:scale-95">{isSending ? 'PROCESANDO...' : 'SOLICITAR CITA'}</button>
             </form>
           </div>
@@ -386,7 +395,7 @@ function App() {
           <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
             <input type="text" placeholder="Nombre completo" required className="w-full p-6 rounded-2xl bg-[#fafafa] ring-1 ring-[#c9c8c6]/30 outline-none focus:ring-2 focus:ring-[#dbac43] transition-all font-medium text-[#414242]" onChange={(e)=>setFormData({...formData, nombre: e.target.value})} value={formData.nombre} />
             <input type="tel" placeholder="Celular" required className="w-full p-6 rounded-2xl bg-[#fafafa] ring-1 ring-[#c9c8c6]/30 outline-none focus:ring-2 focus:ring-[#dbac43] transition-all font-medium text-[#414242]" onChange={(e)=>setFormData({...formData, telefono: e.target.value})} value={formData.telefono} />
-            <textarea placeholder="¿Interesado en algún tratamiento?" rows="4" className="w-full p-6 rounded-2xl bg-[#fafafa] ring-1 ring-[#c9c8c6]/30 outline-none focus:ring-2 focus:ring-[#dbac43] transition-all font-medium md:col-span-2 text-[#414242] resize-none" onChange={(e)=>setFormData({...formData, mensaje: e.target.value})} value={formData.mensaje}></textarea>
+            <textarea placeholder="Servicio interesado, por ejemplo: ortodoncia, implantes, limpieza dental" rows="4" className="w-full p-6 rounded-2xl bg-[#fafafa] ring-1 ring-[#c9c8c6]/30 outline-none focus:ring-2 focus:ring-[#dbac43] transition-all font-medium md:col-span-2 text-[#414242] resize-none" onChange={(e)=>setFormData({...formData, servicio: e.target.value})} value={formData.servicio}></textarea>
             <button type="submit" disabled={isSending} className="w-full md:col-span-2 bg-[#dbac43] text-[#414242] py-6 rounded-2xl font-black shadow-2xl hover:bg-opacity-90 transition-all flex justify-center items-center gap-3 active:scale-[0.98]">{isSending ? 'PROCESANDO...' : 'ENVIAR POR WHATSAPP'} <Send size={20}/></button>
           </form>
         </div>

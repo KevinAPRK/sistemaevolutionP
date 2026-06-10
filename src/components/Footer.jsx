@@ -5,8 +5,10 @@ import { supabase } from '../lib/supabaseClient';
 export default function Footer({ config }) {
   const [siteConfig, setSiteConfig] = useState(config || null);
 
+  const hasContactData = (value) => Boolean(value?.telefono || value?.email || value?.direccion);
+
   useEffect(() => {
-    if (config) {
+    if (hasContactData(config)) {
       setSiteConfig(config);
       return;
     }

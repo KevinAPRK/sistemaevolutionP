@@ -7,23 +7,38 @@ import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import ChatbotPanel from '../components/ChatbotPanel';
 import { supabase } from '../lib/supabaseClient';
+import { X } from 'lucide-react';
 
 function PageWrapper({ children, config }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const handleWhatsAppDirect = () => window.open('https://wa.me/' + (config?.telefono || ''), '_blank');
+  const [pageConfig, setPageConfig] = useState(config || null);
+
+  useEffect(() => {
+    const fetchConfig = async () => {
+      const { data, error } = await supabase.from('configuracion').select('*').eq('id', 1).single();
+      if (!error && data) setPageConfig(data);
+    };
+
+    if (!pageConfig) fetchConfig();
+  }, []);
+
+  const handleWhatsAppDirect = () => window.open(`https://wa.me/${pageConfig?.telefono || config?.telefono || ''}`, '_blank');
   return (
     <div>
       <Nav handleWhatsAppDirect={handleWhatsAppDirect} isScrolled={isScrolled} setIsChatOpen={setIsChatOpen} isChatOpen={isChatOpen} />
       {children}
-      <ChatbotPanel config={config} isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
-      <Footer config={config} />
+      <ChatbotPanel config={pageConfig || config} isChatOpen={isChatOpen} setIsChatOpen={setIsChatOpen} />
+      <Footer config={pageConfig || config} />
     </div>
   );
 }
 
 function Home({ servicios, articulos, casos, config }) {
   const [selectedImg, setSelectedImg] = useState(null);
+  const [selectedArticle, setSelectedArticle] = useState(null);
+  const [formData, setFormData] = useState({ nombre: '', telefono: '', servicio: '' });
+  const [isSending, setIsSending] = useState(false);
   const [medicos, setMedicos] = useState([]);
   const [casosClinicos, setCasosClinicos] = useState([]);
   const [testimonios, setTestimonios] = useState([]);
@@ -34,6 +49,29 @@ function Home({ servicios, articulos, casos, config }) {
   const medicosCarousel = [...medicos, ...medicos];
   const casosCarousel = [...casosClinicos, ...casosClinicos];
   const testimoniosCarousel = [...testimonios, ...testimonios];
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setIsSending(true);
+    const payload = {
+      nombre: formData.nombre,
+      telefono: formData.telefono,
+      mensaje: formData.servicio,
+    };
+
+    const { error } = await supabase.from('consultas').insert([payload]);
+    if (error) {
+      console.error('Error guardando consulta en Home:', error);
+      alert('No se pudo guardar la consulta en la base de datos.');
+      setIsSending(false);
+      return;
+    }
+
+    const whatsappMessage = `Hola Evolution Dental, deseo agendar una cita.%0A%0ANombre del paciente: ${formData.nombre}%0AServicio interesado: ${formData.servicio}`;
+    window.open(`https://wa.me/${phone}?text=${whatsappMessage}`, '_blank');
+    setFormData({ nombre: '', telefono: '', servicio: '' });
+    setIsSending(false);
+  };
 
   useEffect(() => {
     const fetchMedicos = async () => {
@@ -103,12 +141,12 @@ function Home({ servicios, articulos, casos, config }) {
           <div className="bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl border border-slate-100 relative z-10">
             <h3 className="text-2xl font-black text-slate-800 mb-2">¡Solicita tu evaluación!</h3>
             <p className="text-slate-500 font-medium text-sm mb-8">Un especialista te contactará en breve.</p>
-            <div className="space-y-5">
-              <input type="text" placeholder="Nombre completo" className="w-full p-4 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-100 outline-none transition-all font-medium" />
-              <input type="tel" placeholder="Número de Teléfono" className="w-full p-4 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-100 outline-none transition-all font-medium" />
-              <textarea rows="3" placeholder="¿En qué podemos ayudarte?" className="w-full p-4 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-100 outline-none transition-all font-medium resize-none"></textarea>
-              <button onClick={() => window.open(`https://wa.me/${phone}`, '_blank')} className="w-full bg-[#dbac43] text-white py-5 rounded-2xl font-black shadow-xl hover:bg-[#dbac43] transition-all">SOLICITAR CITA</button>
-            </div>
+            <form onSubmit={handleFormSubmit} className="space-y-5">
+              <input type="text" placeholder="Nombre completo" required className="w-full p-4 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-100 outline-none transition-all font-medium" onChange={(e) => setFormData({ ...formData, nombre: e.target.value })} value={formData.nombre} />
+              <input type="tel" placeholder="Número de Teléfono" required className="w-full p-4 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-100 outline-none transition-all font-medium" onChange={(e) => setFormData({ ...formData, telefono: e.target.value })} value={formData.telefono} />
+              <textarea rows="3" placeholder="Servicio interesado, por ejemplo: ortodoncia, implantes, limpieza dental" required className="w-full p-4 rounded-2xl bg-slate-50 border-none ring-1 ring-slate-100 outline-none transition-all font-medium resize-none" onChange={(e) => setFormData({ ...formData, servicio: e.target.value })} value={formData.servicio}></textarea>
+              <button type="submit" className="w-full bg-[#dbac43] text-white py-5 rounded-2xl font-black shadow-xl hover:bg-[#dbac43] transition-all">SOLICITAR CITA</button>
+            </form>
           </div>
         </div>
       </header>
@@ -253,7 +291,7 @@ function Home({ servicios, articulos, casos, config }) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articulosBlog?.filter(Boolean).length > 0 ? articulosBlog.map((art, index) => (
-            <div key={`${index}-${art.titulo || 'blog'}`} className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all cursor-pointer group flex flex-col h-full">
+            <div key={`${index}-${art.titulo || 'blog'}`} onClick={() => setSelectedArticle(art)} className="bg-white rounded-[3rem] shadow-sm border border-slate-100 overflow-hidden hover:shadow-2xl transition-all cursor-pointer group flex flex-col h-full">
               {art.imagen_url && <img src={art.imagen_url} className="w-full h-56 object-cover" />}
               <div className="p-10 flex flex-col flex-1">
                 <p className="text-[10px] font-black text-[#dbac43] uppercase tracking-widest mb-3">{art.fecha ? new Date(art.fecha).toLocaleDateString() : 'Novedad'}</p>
@@ -266,16 +304,37 @@ function Home({ servicios, articulos, casos, config }) {
         </div>
       </section>
 
+      {/* MODAL DE ARTÍCULO (EN LA MISMA PÁGINA) */}
+      {selectedArticle && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-[#414242]/90 backdrop-blur-sm" onClick={() => setSelectedArticle(null)}></div>
+          <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[3.5rem] shadow-2xl relative overflow-hidden flex flex-col">
+            <button className="absolute top-8 right-8 z-20 bg-white/90 p-3 rounded-full shadow-lg text-[#414242]" onClick={() => setSelectedArticle(null)}><X size={24} /></button>
+            <div className="overflow-y-auto">
+              {selectedArticle?.imagen_url && <img src={selectedArticle.imagen_url} className="w-full h-80 object-cover" alt="" />}
+              <div className="p-12 md:p-20">
+                <p className="text-xs font-black text-[#dbac43] uppercase tracking-widest mb-4">{selectedArticle?.fecha ? new Date(selectedArticle.fecha).toLocaleDateString() : ''}</p>
+                <h2 className="text-4xl md:text-5xl font-black mb-6 leading-none text-[#414242]">{selectedArticle?.titulo || ''}</h2>
+                <p className="text-xl font-medium text-[#414242]/60 mb-10 italic border-l-4 border-[#dbac43] pl-4">{selectedArticle?.resumen || ''}</p>
+                <div className="space-y-8 text-[#414242]/80 text-lg leading-relaxed font-medium">
+                  {selectedArticle?.contenido ? selectedArticle.contenido.split('\n').map((parrafo, i) => <p key={i}>{parrafo}</p>) : <p>Cargando información...</p>}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* RESERVA ORIGINAL */}
       <section id="reserva" className="py-24 px-6 bg-slate-100">
         <div className="max-w-4xl mx-auto bg-white p-12 md:p-20 rounded-[4rem] shadow-2xl border border-slate-50 relative overflow-hidden mb-16">
           <h3 className="text-4xl font-black text-center mb-12 uppercase tracking-tighter">Reserva tu cita hoy</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-            <input type="text" placeholder="Nombre completo" className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium" />
-            <input type="tel" placeholder="Celular" className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium" />
-            <textarea placeholder="¿Interesado en algún tratamiento?" rows="4" className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium md:col-span-2"></textarea>
-            <button onClick={() => window.open(`https://wa.me/${phone}`, '_blank')} className="w-full md:col-span-2 bg-[#dbac43] text-white py-6 rounded-2xl font-black shadow-2xl hover:bg-[#dbac43] flex justify-center items-center gap-3">ENVIAR POR WHATSAPP <Send size={20}/></button>
-          </div>
+          <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+            <input type="text" placeholder="Nombre completo" required className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium" onChange={(e) => setFormData({ ...formData, nombre: e.target.value })} value={formData.nombre} />
+            <input type="tel" placeholder="Celular" required className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium" onChange={(e) => setFormData({ ...formData, telefono: e.target.value })} value={formData.telefono} />
+            <textarea placeholder="Servicio interesado, por ejemplo: ortodoncia, implantes, limpieza dental" rows="4" required className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium md:col-span-2 resize-none" onChange={(e) => setFormData({ ...formData, servicio: e.target.value })} value={formData.servicio}></textarea>
+            <button type="submit" className="w-full md:col-span-2 bg-[#dbac43] text-white py-6 rounded-2xl font-black shadow-2xl hover:bg-[#dbac43] flex justify-center items-center gap-3">ENVIAR POR WHATSAPP <Send size={20}/></button>
+          </form>
         </div>
         <div className="max-w-4xl mx-auto text-center"><h2 className="text-2xl font-black text-slate-800 uppercase tracking-tighter mb-4 text-[#dbac43]">Evolution Dental Center</h2><p className="text-slate-500 font-medium italic">"Los mejores dentistas especialistas en salud y estética bucal en Piura."</p></div>
       </section>
