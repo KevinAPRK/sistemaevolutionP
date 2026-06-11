@@ -63,7 +63,8 @@ function App() {
 
   const handleWhatsAppDirect = () => {
     const phone = config?.telefono || '51969826870';
-    window.open(`https://wa.me/${phone}?text=Hola Evolution Dental, solicito información.`, '_blank');
+    const message = encodeURIComponent('Hola Evolution Dental Center, mi consulta es:');
+    window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
   };
 
   const handleFormSubmit = async (e) => {

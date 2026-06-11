@@ -47,8 +47,10 @@ function Home({ servicios, articulos, casos, config }) {
   const serviciosBase = servicios?.filter(Boolean).length > 0 ? servicios : ['Estética Dental', 'Periodoncia', 'Implantes', 'Ortodoncia'];
   const serviciosCarousel = [...serviciosBase, ...serviciosBase];
   const medicosCarousel = [...medicos, ...medicos];
-  const casosCarousel = [...casosClinicos, ...casosClinicos];
   const testimoniosCarousel = [...testimonios, ...testimonios];
+  const casosData = casosClinicos?.filter(Boolean).length > 0 ? casosClinicos.filter(Boolean) : (casos?.filter(Boolean) || []);
+  const featuredCase = casosData[0] || null;
+  const miniCases = casosData.slice(1, 3);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -225,31 +227,82 @@ function Home({ servicios, articulos, casos, config }) {
         </div>
       </section>
 
-      {/* GALERÍA ORIGINAL */}
+      {/* CASOS CLINICOS DE EXITO */}
       <section id="galeria" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center mb-16">
           <h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Casos Clínicos de Éxito</h3>
-          <p className="text-[#dbac43] font-bold mt-2 tracking-widest uppercase text-xs">Transformaciones reales gestionadas desde el panel</p>
+          <p className="text-slate-600 max-w-4xl mx-auto mt-4 leading-relaxed">
+            Conoce algunas transformaciones reales realizadas por nuestro equipo. Cada sonrisa refleja un tratamiento personalizado, seguro y enfocado en mejorar la estética, función y confianza de nuestros pacientes.
+          </p>
         </div>
-        <div className="overflow-hidden px-4 md:px-10">
-          <div className="carousel-track carousel-track-cases flex w-max gap-8 py-2">
-          {casosCarousel?.filter(Boolean).length > 0 ? casosCarousel.map((caso, index) => (
-            <div key={`${index}-${caso.titulo || 'caso'}`} className="bg-white p-6 rounded-[3.5rem] shadow-xl border border-slate-100 shrink-0 w-[420px]">
-              <p className="text-center font-black text-[#dbac43] uppercase tracking-[0.2em] text-sm mb-6 bg-[#dbac43]/10 py-3 rounded-2xl">{caso.titulo}</p>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="relative group cursor-pointer overflow-hidden rounded-[2rem]" onClick={() => setSelectedImg(caso.antes)}>
-                  <img src={caso.antes} className="w-full aspect-square object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute top-4 left-4 bg-[#dbac43] text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase shadow-lg">ANTES</div>
+
+        {featuredCase ? (
+          <>
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
+              <article className="xl:col-span-2 bg-white p-6 md:p-8 rounded-[3rem] shadow-xl border border-slate-100">
+                <div className="flex items-center justify-between mb-6 gap-4">
+                  <h4 className="font-black text-2xl md:text-3xl text-slate-900 tracking-tight">{featuredCase.titulo || 'Caso destacado'}</h4>
+                  <span className="text-[10px] font-black uppercase tracking-widest bg-[#dbac43]/10 text-[#dbac43] px-3 py-1.5 rounded-full">Caso Destacado</span>
                 </div>
-                <div className="relative group cursor-pointer overflow-hidden rounded-[2rem]" onClick={() => setSelectedImg(caso.despues)}>
-                  <img src={caso.despues} className="w-full aspect-square object-cover transition-transform duration-700 group-hover:scale-110" />
-                  <div className="absolute top-4 left-4 bg-[#dbac43] text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase shadow-lg">DESPUÉS</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="relative group cursor-pointer overflow-hidden rounded-[2rem]" onClick={() => setSelectedImg(featuredCase.antes)}>
+                    <img src={featuredCase.antes} alt="Antes" className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute top-4 left-4 bg-slate-900 text-white text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">ANTES</div>
+                    <div className="absolute inset-0 bg-[#dbac43]/0 group-hover:bg-[#dbac43]/20 transition-colors flex items-center justify-center"><ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity" size={30} /></div>
+                  </div>
+                  <div className="relative group cursor-pointer overflow-hidden rounded-[2rem]" onClick={() => setSelectedImg(featuredCase.despues)}>
+                    <img src={featuredCase.despues} alt="Despues" className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-110" />
+                    <div className="absolute top-4 left-4 bg-[#dbac43] text-slate-900 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">DESPUÉS</div>
+                    <div className="absolute inset-0 bg-[#dbac43]/0 group-hover:bg-[#dbac43]/20 transition-colors flex items-center justify-center"><ZoomIn className="text-white opacity-0 group-hover:opacity-100 transition-opacity" size={30} /></div>
+                  </div>
                 </div>
+              </article>
+
+              <div className="space-y-4">
+                {miniCases.map((caso, index) => (
+                  <article key={`${caso.id || index}-${caso.titulo || 'mini-caso'}`} className="bg-white p-4 rounded-[2rem] shadow-sm border border-slate-100">
+                    <h5 className="font-black text-slate-900 text-sm uppercase tracking-wide mb-3">{caso.titulo || `Caso ${index + 2}`}</h5>
+                    <div className="grid grid-cols-2 gap-3 mb-3">
+                      <div className="relative overflow-hidden rounded-xl cursor-pointer" onClick={() => setSelectedImg(caso.antes)}>
+                        <img src={caso.antes} alt="Antes" className="w-full h-20 object-cover" />
+                        <span className="absolute top-1.5 left-1.5 bg-slate-900 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">Antes</span>
+                      </div>
+                      <div className="relative overflow-hidden rounded-xl cursor-pointer" onClick={() => setSelectedImg(caso.despues)}>
+                        <img src={caso.despues} alt="Despues" className="w-full h-20 object-cover" />
+                        <span className="absolute top-1.5 left-1.5 bg-[#dbac43] text-slate-900 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">Después</span>
+                      </div>
+                    </div>
+                    <p className="text-xs text-slate-500 leading-relaxed">Resultado visible en estética y funcionalidad, con tratamiento adaptado al paciente.</p>
+                  </article>
+                ))}
+
+                {miniCases.length === 0 && (
+                  <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-dashed border-slate-200 text-center text-slate-400 text-sm font-medium">
+                    Pronto agregaremos más casos clínicos.
+                  </div>
+                )}
               </div>
             </div>
-          )) : <p className="col-span-2 text-center text-slate-400">No hay casos publicados.</p>}
+
+            <div className="text-center mt-10">
+              <button
+                type="button"
+                onClick={() => {
+                  const mensaje = encodeURIComponent('Hola Evolution Dental Center, quiero una evaluación.');
+                  window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
+                }}
+                className="bg-[#dbac43] text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:brightness-105 transition-all"
+              >
+                Quiero una evaluación
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="py-16 text-center bg-white rounded-[3rem] border border-dashed border-slate-200">
+            <ImageIcon className="mx-auto text-slate-300 mb-4" size={42} />
+            <p className="text-slate-400 font-semibold">No hay casos publicados por el momento.</p>
           </div>
-        </div>
+        )}
       </section>
 
       {/* COMENTARIOS DE PACIENTES */}
