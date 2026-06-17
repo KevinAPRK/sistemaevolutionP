@@ -387,9 +387,10 @@ function App() {
             <iframe src={`https://maps.google.com/maps?q=${encodeURIComponent('Evolution Clínica Dental Piura')}&t=&z=15&ie=UTF8&iwloc=&output=embed`} width="100%" height="100%" style={{ border: 0 }} allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade" title="Mapa de Clínica Evolution Dental Center" className="absolute inset-0 grayscale-[20%] contrast-125 hover:grayscale-0 transition-all duration-700"></iframe>
           </div>
         </div>
+
       </section>
 
-      {/* RESERVA */}
+      {/* RESERVA ojala este sea el mejor */}
       <section id="reserva" className="py-24 px-6 bg-[#dbac43]/10">
         <div className="max-w-4xl mx-auto bg-white p-12 md:p-20 rounded-[4rem] shadow-2xl border border-white relative overflow-hidden mb-16">
           <h3 className="text-4xl font-black text-center mb-12 uppercase tracking-tighter text-[#414242]">Reserva tu cita hoy</h3>
