@@ -66,25 +66,25 @@ function NosotrosContent() {
   }, []);
 
   return (
-    <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto">
+    <div className="pt-28 md:pt-32 pb-16 md:pb-24 px-4 sm:px-6 max-w-7xl mx-auto">
       <section className="mb-12">
         <div className="inline-flex items-center gap-2 px-4 py-2 text-xs font-black text-[#dbac43] bg-[#dbac43]/10 rounded-full uppercase tracking-widest mb-5">
           <Award size={14} /> Nuestra Clínica
         </div>
-        <h2 className="text-5xl md:text-6xl font-black tracking-tighter text-[#414242]">
+        <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-[#414242]">
           Conoce <span className="text-[#dbac43]">Evolution Dental Center</span>
         </h2>
         
       </section>
 
       <section className="grid md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white p-10 rounded-[3rem] shadow-xl border border-[#c9c8c6]/25">
+        <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] shadow-xl border border-[#c9c8c6]/25">
           <h3 className="text-2xl font-black text-[#dbac43] mb-4">Quiénes Somos</h3>
           <p className="text-[#414242]/70 leading-relaxed text-[15px] md:text-base">
             En Evolution Dental Center trabajamos para transformar sonrisas con una atención cercana, profesional y personalizada. Nuestro compromiso es brindar tratamientos odontológicos de calidad, utilizando tecnología moderna y un equipo preparado para cuidar la salud bucal de cada paciente en Piura.
           </p>
         </div>
-        <div className="bg-[#414242] p-10 rounded-[3rem] shadow-xl text-white border border-white/10">
+        <div className="bg-[#414242] p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] shadow-xl text-white border border-white/10">
           <h3 className="text-2xl font-black mb-4">Tecnología de Punta</h3>
           <p className="opacity-90 leading-relaxed text-[15px] md:text-base">
             Contamos con equipos modernos que nos permiten realizar diagnósticos más precisos y tratamientos más seguros. Esto nos ayuda a ofrecer una atención eficiente, cómoda y adaptada a las necesidades de cada paciente.
@@ -93,11 +93,11 @@ function NosotrosContent() {
       </section>
 
       <section className="grid md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white p-10 rounded-[3rem] shadow-xl border border-[#c9c8c6]/25">
+        <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] shadow-xl border border-[#c9c8c6]/25">
           <div className="flex items-center gap-3 mb-5 text-[#dbac43] font-black uppercase tracking-widest text-xs"><Heart size={16} /> Nuestra Misión</div>
           <p className="text-[#414242]/70 leading-relaxed text-[15px] md:text-base">Brindar atención odontológica integral, segura y de calidad, ayudando a nuestros pacientes a recuperar su salud bucal, mejorar su sonrisa y sentirse más seguros en cada etapa del tratamiento.</p>
         </div>
-        <div className="bg-white p-10 rounded-[3rem] shadow-xl border border-[#c9c8c6]/25">
+        <div className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] shadow-xl border border-[#c9c8c6]/25">
           <div className="flex items-center gap-3 mb-5 text-[#dbac43] font-black uppercase tracking-widest text-xs"><Sparkles size={16} /> Nuestra Visión</div>
           <p className="text-[#414242]/70 leading-relaxed text-[15px] md:text-base">Ser una clínica dental reconocida en Piura por nuestra calidad humana, innovación, confianza y compromiso con la salud oral de nuestros pacientes.</p>
         </div>

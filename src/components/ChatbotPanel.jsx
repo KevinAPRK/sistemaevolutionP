@@ -33,17 +33,17 @@ export default function ChatbotPanel({ config, isChatOpen, setIsChatOpen }) {
   const whatsappMessage = encodeURIComponent('Hola Evolution Dental Center, mi consulta es:');
 
   return (
-    <div className="fixed bottom-10 right-10 z-[100] flex flex-col items-end">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-10 md:right-10 z-[100] flex flex-col items-end">
       {isChatOpen && (
-        <div className="bg-white w-96 mb-6 rounded-[3rem] shadow-2xl border border-[#c9c8c6]/30 overflow-hidden animate-in fade-in slide-in-from-bottom-10">
-          <div className="bg-[#414242] p-8 text-white flex items-center justify-between">
+        <div className="bg-white w-[min(92vw,24rem)] sm:w-96 mb-4 sm:mb-6 rounded-[2rem] sm:rounded-[3rem] shadow-2xl border border-[#c9c8c6]/30 overflow-hidden animate-in fade-in slide-in-from-bottom-10">
+          <div className="bg-[#414242] p-5 sm:p-8 text-white flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img src="/icononav.png" alt="Icono Evolution" className="w-7 h-7 object-contain rounded-lg bg-white/10 p-0.5" />
               <p className="font-black text-sm uppercase text-white">Asistente Virtual</p>
             </div>
             <button onClick={() => { setIsChatOpen(false); setChatResponse(null); }} className="hover:bg-white/10 p-2 rounded-full transition-all"><X size={24}/></button>
           </div>
-          <div className="p-8 text-sm text-[#414242]/80 space-y-6">
+          <div className="p-5 sm:p-8 text-sm text-[#414242]/80 space-y-6">
             {!chatResponse ? (
               <>
                 <p className="bg-[#fafafa] p-6 rounded-[2rem] font-bold text-[#414242] italic border-l-4 border-[#dbac43]">{effectiveConfig?.mensaje_bot || '¡Hola! Bienvenidos a Evolution Dental. ¿En qué podemos ayudarte hoy?'}</p>
@@ -62,7 +62,7 @@ export default function ChatbotPanel({ config, isChatOpen, setIsChatOpen }) {
           </div>
         </div>
       )}
-      <button onClick={() => setIsChatOpen(!isChatOpen)} className="bg-[#dbac43] text-[#414242] p-6 rounded-3xl shadow-2xl hover:scale-110 transition-transform" aria-label="Abrir chat bot"><MessageCircle size={32} /></button>
+      <button onClick={() => setIsChatOpen(!isChatOpen)} className="bg-[#dbac43] text-[#414242] p-4 sm:p-5 md:p-6 rounded-3xl shadow-2xl hover:scale-110 transition-transform" aria-label="Abrir chat bot"><MessageCircle size={28} className="sm:w-8 sm:h-8" /></button>
     </div>
   );
 }

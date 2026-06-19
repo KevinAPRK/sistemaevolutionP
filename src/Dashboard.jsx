@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
   LogOut, LayoutDashboard, Users, Settings, Activity, CheckCircle2, 
   ExternalLink, Save, AlertCircle, Plus, Trash2, Image as ImageIcon, 
-  Upload, Clock, FileText, BookOpen, MessageSquare, Eye, X, Pencil
+  Upload, Clock, FileText, BookOpen, MessageSquare, Eye, X, Pencil, Menu
 } from 'lucide-react';
 
 function Dashboard() {
@@ -12,6 +12,7 @@ function Dashboard() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('pacientes');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [reviewSubTab, setReviewSubTab] = useState('pendientes'); 
 
   // --- ESTADOS DE DATOS ---
@@ -178,6 +179,15 @@ function Dashboard() {
     fetchMedicos();
   };
 
+  const dashboardTabs = [
+    { id: 'pacientes', label: 'Pacientes', icon: Users },
+    { id: 'staff', label: 'Staff Médico', icon: Users },
+    { id: 'testimonios', label: 'Testimonios', icon: MessageSquare },
+    { id: 'galeria', label: 'Galería Casos', icon: LayoutDashboard },
+    { id: 'blog', label: 'Blog / Novedades', icon: FileText },
+    { id: 'configuracion', label: 'Configuración Web', icon: Settings },
+  ];
+
   // ==========================================
   // LÓGICA GALERÍA (CRUD)
   // ==========================================
@@ -341,13 +351,53 @@ function Dashboard() {
       </aside>
 
       {/* CONTENIDO PRINCIPAL */}
-      <main className="flex-1 p-6 md:p-12 overflow-y-auto">
+      <main className="flex-1 p-4 sm:p-6 md:p-12 overflow-y-auto">
+        <div className="lg:hidden mb-4">
+          <div className="bg-[#414242] rounded-2xl p-3 text-white shadow-lg">
+            <div className="flex items-center justify-between">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#c9c8c6]">Panel Admin</p>
+              <button
+                type="button"
+                onClick={() => setMobileNavOpen((prev) => !prev)}
+                className="p-2 rounded-lg hover:bg-white/10"
+                aria-label="Abrir navegación del panel"
+              >
+                <Menu size={18} />
+              </button>
+            </div>
+
+            {mobileNavOpen && (
+              <div className="mt-3 grid grid-cols-1 gap-2">
+                {dashboardTabs.map(({ id, label, icon: Icon }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => {
+                      setActiveTab(id);
+                      setMobileNavOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition-all ${activeTab === id ? 'bg-[#fafafa] text-[#414242]' : 'text-white/85 hover:bg-white/10'}`}
+                  >
+                    <Icon size={16} /> {label}
+                  </button>
+                ))}
+                <button
+                  onClick={handleLogout}
+                  className="mt-1 w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-black/20 text-red-300 font-black text-xs uppercase tracking-widest"
+                >
+                  <LogOut size={16} /> Cerrar Sesión
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
         
         {/* TAB: PACIENTES */}
         {activeTab === 'pacientes' && (
           <div className="animate-in fade-in duration-300">
-            <h2 className="text-4xl font-black text-[#414242] tracking-tight mb-8">Gestión de Pacientes</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#414242] tracking-tight mb-6 md:mb-8">Gestión de Pacientes</h2>
             <div className="bg-white rounded-[2.5rem] shadow-sm border border-[#c9c8c6]/30 overflow-hidden">
+              <div className="overflow-x-auto">
                 <table className="w-full text-left">
                   <thead><tr className="bg-[#fafafa] border-b border-[#c9c8c6]/30">
                     <th className="p-6 font-black text-[#414242]/50 text-[10px] uppercase tracking-[0.2em]">Registro</th>
@@ -367,6 +417,7 @@ function Dashboard() {
                     {consultas.length === 0 && <tr><td colSpan="4" className="p-10 text-center text-[#c9c8c6] font-bold">No hay pacientes registrados.</td></tr>}
                   </tbody>
                 </table>
+              </div>
             </div>
           </div>
         )}
@@ -374,12 +425,12 @@ function Dashboard() {
         {/* TAB: STAFF MÉDICO */}
         {activeTab === 'staff' && (
           <div className="animate-in fade-in duration-300 space-y-12">
-            <header className="flex justify-between items-center">
+            <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <h2 className="text-4xl font-black text-[#414242] tracking-tight">Staff Odontológico</h2>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#414242] tracking-tight">Staff Odontológico</h2>
                 <p className="text-[#414242]/60 font-medium text-xs mt-1">Gestiona el equipo de doctores que se muestran en el portal principal.</p>
               </div>
-              <div className="px-4 py-2 rounded-full text-xs font-black uppercase bg-[#414242]/10 text-[#414242] border border-[#414242]/20">{medicos.length} Especialistas</div>
+              <div className="px-4 py-2 rounded-full text-xs font-black uppercase bg-[#414242]/10 text-[#414242] border border-[#414242]/20 self-start sm:self-auto">{medicos.length} Especialistas</div>
             </header>
 
             <div className={`p-8 md:p-12 rounded-[3rem] shadow-xl border transition-colors ${editingStaffId ? 'bg-[#414242]/5 border-[#414242]/30' : 'bg-white border-[#c9c8c6]/30'}`}>
@@ -407,7 +458,7 @@ function Dashboard() {
                   </label>
                 </div>
                 
-                <div className="md:col-span-3 flex gap-4 mt-4">
+                <div className="md:col-span-3 flex flex-col sm:flex-row gap-4 mt-4">
                   {editingStaffId && (
                     <button type="button" onClick={handleCancelEditStaff} className="bg-[#c9c8c6]/40 text-[#414242] py-4 px-8 rounded-2xl font-black shadow-sm hover:bg-[#c9c8c6]/60 transition-all text-xs uppercase tracking-widest">CANCELAR</button>
                   )}
@@ -424,7 +475,7 @@ function Dashboard() {
               ) : (
                 medicos.map((m) => (
                   <div key={m.id} className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-[#c9c8c6]/20 flex flex-col justify-between items-center text-center relative overflow-hidden group hover:shadow-lg transition-shadow">
-                    <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-4 right-4 flex gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                       <button onClick={()=>handleEditStaff(m)} className="p-2 text-white bg-[#414242] hover:bg-black rounded-xl transition-all shadow-sm"><Pencil size={18}/></button>
                       <button onClick={()=>handleDeleteStaff(m.id)} className="p-2 text-white bg-red-500 hover:bg-red-600 rounded-xl transition-all shadow-sm"><Trash2 size={18}/></button>
                     </div>
@@ -463,11 +514,11 @@ function Dashboard() {
                   {testimonios.filter(t => !t.aprobado).length > 0 ? testimonios.filter(t => !t.aprobado).map((t) => (
                     <div key={t.id} className="p-6 bg-[#fafafa] rounded-3xl border border-[#c9c8c6]/20 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in">
                       <div className="space-y-2 max-w-2xl">
-                        <div className="flex items-center gap-3"><span className="font-black text-[#414242] text-base">{t.nombre}</span><span className="text-xs font-bold text-[#414242] bg-[#414242]/10 px-2 py-0.5 rounded-lg">⭐ {t.estrellas || 5} estrellas</span></div>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3"><span className="font-black text-[#414242] text-base">{t.nombre}</span><span className="text-xs font-bold text-[#414242] bg-[#414242]/10 px-2 py-0.5 rounded-lg w-fit">⭐ {t.estrellas || 5} estrellas</span></div>
                         <p className="text-[#414242]/80 text-sm italic font-medium">"{t.comentario}"</p>
                         <p className="text-[10px] font-bold text-[#c9c8c6] uppercase tracking-widest">{new Date(t.created_at).toLocaleDateString()}</p>
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center gap-2 shrink-0 flex-wrap">
                         <button onClick={() => handleToggleApproval(t.id, false)} className="bg-[#414242] text-white p-3 rounded-xl font-black text-xs uppercase flex items-center gap-1.5 shadow-md hover:bg-black transition-colors"><CheckCircle2 size={16} /> APROBAR</button>
                         <button onClick={() => handleDeleteReview(t.id)} className="bg-red-50 text-red-600 p-3 rounded-xl hover:bg-red-100 transition-colors"><Trash2 size={16}/></button>
                       </div>
@@ -481,10 +532,10 @@ function Dashboard() {
                   {testimonios.filter(t => t.aprobado).length > 0 ? testimonios.filter(t => t.aprobado).map((t) => (
                     <div key={t.id} className="p-6 bg-[#fafafa] rounded-3xl border border-[#c9c8c6]/20 flex flex-col md:flex-row md:items-center justify-between gap-4 animate-in fade-in">
                       <div className="space-y-2 max-w-2xl">
-                        <div className="flex items-center gap-3"><span className="font-black text-[#414242] text-base">{t.nombre}</span><span className="text-xs font-bold text-[#414242] bg-[#414242]/10 px-2 py-0.5 rounded-lg">⭐ {t.estrellas || 5} estrellas</span></div>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3"><span className="font-black text-[#414242] text-base">{t.nombre}</span><span className="text-xs font-bold text-[#414242] bg-[#414242]/10 px-2 py-0.5 rounded-lg w-fit">⭐ {t.estrellas || 5} estrellas</span></div>
                         <p className="text-[#414242]/80 text-sm italic font-medium">"{t.comentario}"</p>
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex items-center gap-2 shrink-0 flex-wrap">
                         <button onClick={() => handleToggleApproval(t.id, true)} className="bg-[#c9c8c6]/40 text-[#414242] px-4 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider hover:bg-[#c9c8c6]/60 transition-all flex items-center gap-1.5">👁️ Ocultar de la Web</button>
                         <button onClick={() => handleDeleteReview(t.id)} className="bg-red-50 text-red-600 p-2.5 rounded-xl hover:bg-red-100 transition-colors"><Trash2 size={16}/></button>
                       </div>
@@ -501,9 +552,9 @@ function Dashboard() {
         {/* TAB: GALERÍA */}
         {activeTab === 'galeria' && (
           <div className="animate-in fade-in duration-300 space-y-12">
-            <header className="flex justify-between items-center">
-              <h2 className="text-4xl font-black text-[#414242] tracking-tight">Galería de Casos</h2>
-              <div className="px-4 py-2 rounded-full text-xs font-black uppercase bg-[#414242]/10 text-[#414242] border border-[#414242]/20">{casos.length} Casos</div>
+            <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#414242] tracking-tight">Galería de Casos</h2>
+              <div className="px-4 py-2 rounded-full text-xs font-black uppercase bg-[#414242]/10 text-[#414242] border border-[#414242]/20 self-start sm:self-auto">{casos.length} Casos</div>
             </header>
 
             <div className={`p-8 md:p-12 rounded-[3rem] shadow-xl border transition-colors ${editingCaseId ? 'bg-[#414242]/5 border-[#414242]/30' : 'bg-white border-[#c9c8c6]/30'}`}>
@@ -535,7 +586,7 @@ function Dashboard() {
                   </label>
                 </div>
 
-                <div className="md:col-span-3 flex gap-4 mt-4">
+                <div className="md:col-span-3 flex flex-col sm:flex-row gap-4 mt-4">
                   {editingCaseId && (
                     <button type="button" onClick={handleCancelEditCase} className="bg-[#c9c8c6]/40 text-[#414242] py-4 px-8 rounded-2xl font-black shadow-sm hover:bg-[#c9c8c6]/60 transition-all text-xs uppercase tracking-widest">CANCELAR</button>
                   )}
@@ -553,7 +604,7 @@ function Dashboard() {
                     
                     <div className="flex justify-between items-center">
                       <h4 className="font-black text-[#414242] uppercase text-xs tracking-widest pl-2">{caso.titulo}</h4>
-                      <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                         <button onClick={()=>handleEditCase(caso)} className="p-2 text-white bg-[#414242] rounded-xl hover:bg-black transition-all shadow-sm"><Pencil size={18}/></button>
                         <button onClick={()=>handleDeleteCase(caso.id)} className="p-2 text-white bg-red-500 rounded-xl transition-all shadow-sm"><Trash2 size={18}/></button>
                       </div>
@@ -574,9 +625,9 @@ function Dashboard() {
         {/* TAB: BLOG */}
         {activeTab === 'blog' && (
           <div className="animate-in fade-in duration-300 space-y-12">
-            <header className="flex justify-between items-center">
-              <h2 className="text-4xl font-black text-[#414242] tracking-tight">Blog y Novedades</h2>
-              <div className="px-4 py-2 rounded-full text-xs font-black uppercase bg-[#414242]/10 text-[#414242] border border-[#414242]/20">{articulos.length} Artículos</div>
+            <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#414242] tracking-tight">Blog y Novedades</h2>
+              <div className="px-4 py-2 rounded-full text-xs font-black uppercase bg-[#414242]/10 text-[#414242] border border-[#414242]/20 self-start sm:self-auto">{articulos.length} Artículos</div>
             </header>
 
             <div className={`p-8 md:p-12 rounded-[3rem] shadow-xl border transition-colors ${editingBlogId ? 'bg-[#414242]/5 border-[#414242]/30' : 'bg-white border-[#c9c8c6]/30'}`}>
@@ -611,7 +662,7 @@ function Dashboard() {
                   <textarea required placeholder="Escribe aquí el cuerpo del artículo..." className="w-full p-4 rounded-2xl bg-[#fafafa] border-none ring-1 ring-[#c9c8c6]/30 focus:ring-2 focus:ring-[#414242] outline-none font-medium resize-none h-64 shadow-sm" value={newBlog.contenido} onChange={(e)=>setNewBlog({...newBlog, contenido: e.target.value})}></textarea>
                 </div>
                 
-                <div className="md:col-span-2 flex gap-4 mt-2">
+                <div className="md:col-span-2 flex flex-col sm:flex-row gap-4 mt-2">
                   {editingBlogId && (
                     <button type="button" onClick={handleCancelEditBlog} className="bg-[#c9c8c6]/40 text-[#414242] py-4 px-8 rounded-2xl font-black shadow-sm hover:bg-[#c9c8c6]/60 transition-all text-xs uppercase tracking-widest">CANCELAR</button>
                   )}
@@ -627,16 +678,16 @@ function Dashboard() {
                 <div className="col-span-2 py-20 text-center text-[#c9c8c6] font-bold bg-white rounded-[3rem] border border-dashed border-[#c9c8c6]">No hay artículos publicados todavía.</div>
               ) : (
                 articulos.map((art) => (
-                  <div key={art.id} className="bg-white rounded-[2.5rem] shadow-sm border border-[#c9c8c6]/20 flex overflow-hidden group hover:shadow-lg transition-shadow relative">
-                    <div className="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10 bg-white/80 backdrop-blur-sm p-1 rounded-xl shadow-sm">
+                  <div key={art.id} className="bg-white rounded-[2.5rem] shadow-sm border border-[#c9c8c6]/20 flex flex-col sm:flex-row overflow-hidden group hover:shadow-lg transition-shadow relative">
+                    <div className="absolute top-4 right-4 flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10 bg-white/80 backdrop-blur-sm p-1 rounded-xl shadow-sm">
                       <button onClick={()=>handleEditBlog(art)} className="p-2 text-white bg-[#414242] hover:bg-black rounded-lg transition-all shadow-sm"><Pencil size={16}/></button>
                       <button onClick={()=>handleDeleteBlog(art.id)} className="p-2 text-white bg-red-500 hover:bg-red-600 rounded-lg transition-all shadow-sm"><Trash2 size={16}/></button>
                     </div>
 
-                    <div className="w-1/3 bg-[#fafafa] relative">
+                    <div className="w-full sm:w-1/3 bg-[#fafafa] relative h-44 sm:h-auto">
                       <img src={art.imagen_url} className="w-full h-full object-cover" alt="Portada" />
                     </div>
-                    <div className="w-2/3 p-6 flex flex-col justify-center">
+                    <div className="w-full sm:w-2/3 p-6 flex flex-col justify-center">
                       <p className="text-[10px] font-black text-[#414242]/60 uppercase tracking-widest mb-2">{new Date(art.fecha).toLocaleDateString()}</p>
                       <h4 className="font-black text-[#414242] mb-1 leading-tight pr-12">{art.titulo}</h4>
                       <p className="text-xs text-[#414242]/70 line-clamp-2">{art.resumen}</p>
@@ -651,7 +702,7 @@ function Dashboard() {
         {/* TAB: CONFIGURACIÓN */}
         {activeTab === 'configuracion' && (
           <div className="animate-in fade-in duration-300 max-w-3xl">
-            <h2 className="text-4xl font-black text-[#414242] mb-8 tracking-tight">Configuración Web</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-[#414242] mb-8 tracking-tight">Configuración Web</h2>
             {configSuccess && <div className="mb-6 bg-green-50 text-green-700 p-4 rounded-2xl font-bold flex gap-2"><CheckCircle2/> {configSuccess}</div>}
             <form onSubmit={handleSaveConfig} className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-[#c9c8c6]/30 space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">

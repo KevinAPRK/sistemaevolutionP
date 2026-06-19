@@ -122,14 +122,14 @@ function Home({ servicios, articulos, casos, config }) {
   return (
     <PageWrapper config={config}>
       {/* HERO SECTION ORIGINAL */}
-      <header className="relative pt-40 pb-24 px-6 bg-slate-50 overflow-hidden">
+      <header className="relative pt-28 md:pt-40 pb-16 md:pb-24 px-4 sm:px-6 bg-slate-50 overflow-hidden">
         <div className="absolute top-0 right-0 w-1/2 h-full bg-[#dbac43]/5 rounded-bl-[10rem] -z-10 hidden lg:block"></div>
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 text-xs font-black text-[#dbac43] bg-[#dbac43]/10 rounded-full tracking-widest uppercase shadow-sm">
               <ShieldCheck size={14}/> Clínica Odontológica Especializada
             </div>
-            <h2 className="text-5xl md:text-7xl font-black mb-6 leading-[1.1] tracking-tight text-slate-900">
+            <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-[1.1] tracking-tight text-slate-900">
               Tu sonrisa, <br/><span className="text-[#dbac43]">nuestra historia.</span>
             </h2>
             <p className="text-slate-500 text-lg md:text-xl max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed font-medium">
@@ -140,7 +140,7 @@ function Home({ servicios, articulos, casos, config }) {
               <a href="#reserva" className="w-full sm:w-auto bg-[#dbac43] text-white px-8 py-4 rounded-2xl font-black shadow-xl hover:bg-[#dbac43] transition-all shadow-[#dbac43]/20 text-center block">AGENDA TU CITA</a>
             </div>
           </div>
-          <div className="bg-white p-8 md:p-10 rounded-[3rem] shadow-2xl border border-slate-100 relative z-10">
+          <div className="bg-white p-6 sm:p-8 md:p-10 rounded-[2.25rem] md:rounded-[3rem] shadow-2xl border border-slate-100 relative z-10">
             <h3 className="text-2xl font-black text-slate-800 mb-2">¡Solicita tu evaluación!</h3>
             <p className="text-slate-500 font-medium text-sm mb-8">Un especialista te contactará en breve.</p>
             <form onSubmit={handleFormSubmit} className="space-y-5">
@@ -154,9 +154,9 @@ function Home({ servicios, articulos, casos, config }) {
       </header>
 
       {/* NOSOTROS ORIGINAL */}
-      <section id="nosotros" className="py-24 px-6 max-w-7xl mx-auto">
+      <section id="nosotros" className="py-16 md:py-24 px-4 sm:px-6 max-w-7xl mx-auto">
         <div className="grid md:grid-cols-2 gap-16 items-center">
-          <div className="relative bg-[#dbac43] rounded-[3.5rem] p-12 text-white shadow-2xl overflow-hidden min-h-[400px] flex flex-col justify-center">
+          <div className="relative bg-[#dbac43] rounded-[2.25rem] md:rounded-[3.5rem] p-8 md:p-12 text-white shadow-2xl overflow-hidden min-h-[320px] md:min-h-[400px] flex flex-col justify-center">
             <ShieldCheck size={200} className="absolute -right-10 -bottom-10 opacity-10" />
             <h3 className="text-4xl md:text-5xl font-black mb-6 uppercase tracking-tight relative z-10 leading-none">Especialistas<br/>en tu Salud<br/>Bucal</h3>
             <p className="text-xl font-medium text-[#c9c8c6] relative z-10 max-w-sm">Cuidamos de ti con la tecnología más avanzada.</p>
@@ -170,7 +170,7 @@ function Home({ servicios, articulos, casos, config }) {
       </section>
 
       {/* SERVICIOS ORIGINAL */}
-      <section id="servicios" className="py-24 px-6 max-w-7xl mx-auto bg-white rounded-[4rem] shadow-sm border border-slate-100">
+      <section id="servicios" className="py-16 md:py-24 px-4 sm:px-6 max-w-7xl mx-auto bg-white rounded-[2.25rem] md:rounded-[4rem] shadow-sm border border-slate-100">
         <div className="text-center mb-16">
           <h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Nuestros Servicios</h3>
           <div className="w-20 h-1.5 bg-[#dbac43] mx-auto mt-6 rounded-full"></div>
@@ -180,7 +180,7 @@ function Home({ servicios, articulos, casos, config }) {
           {serviciosCarousel.map((s, index) => {
             const isReal = typeof s === 'object';
             return (
-              <div key={`${index}-${isReal ? s.nombre : s}`} className="bg-slate-50 p-10 rounded-[3rem] hover:bg-white hover:shadow-2xl transition-all duration-500 group border border-transparent hover:border-[#dbac43]/10 flex flex-col h-full w-[320px] shrink-0">
+              <div key={`${index}-${isReal ? s.nombre : s}`} className="bg-slate-50 p-6 md:p-10 rounded-[2rem] md:rounded-[3rem] hover:bg-white hover:shadow-2xl transition-all duration-500 group border border-transparent hover:border-[#dbac43]/10 flex flex-col h-full w-[280px] sm:w-[320px] shrink-0">
                 <div className="bg-white w-16 h-16 rounded-2xl flex items-center justify-center text-[#dbac43] mb-8 shadow-sm group-hover:bg-[#dbac43] group-hover:text-white transition-all"><Stethoscope size={32} /></div>
                 <h4 className="font-black text-2xl mb-4 text-slate-800">{isReal ? s.nombre : s}</h4>
                 <p className="text-slate-500 text-sm leading-relaxed font-medium flex-1">{isReal ? s.descripcion : 'Tratamiento especializado con tecnología avanzada.'}</p>
@@ -193,7 +193,7 @@ function Home({ servicios, articulos, casos, config }) {
       </section>
 
       {/* STAFF EN CARRUSEL */}
-      <section id="staff" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="staff" className="py-16 md:py-24 px-4 sm:px-6 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center mb-16">
           <h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Nuestro Staff Médico</h3>
           <p className="text-[#dbac43] font-bold mt-2 tracking-widest uppercase text-xs">Doctores y especialistas de Evolution Dental</p>
@@ -228,7 +228,7 @@ function Home({ servicios, articulos, casos, config }) {
       </section>
 
       {/* CASOS CLINICOS DE EXITO */}
-      <section id="galeria" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="galeria" className="py-16 md:py-24 px-4 sm:px-6 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center mb-16">
           <h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Casos Clínicos de Éxito</h3>
           <p className="text-slate-600 max-w-4xl mx-auto mt-4 leading-relaxed">
@@ -306,7 +306,7 @@ function Home({ servicios, articulos, casos, config }) {
       </section>
 
       {/* COMENTARIOS DE PACIENTES */}
-      <section id="comentarios" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="comentarios" className="py-16 md:py-24 px-4 sm:px-6 max-w-7xl mx-auto border-t border-slate-100">
         <div className="text-center mb-16">
           <h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Comentarios de Pacientes</h3>
           <p className="text-[#dbac43] font-bold mt-2 tracking-widest uppercase text-xs">Opiniones publicadas desde la base de datos</p>
@@ -337,7 +337,7 @@ function Home({ servicios, articulos, casos, config }) {
       </section>
 
       {/* BLOG ORIGINAL */}
-      <section id="blog" className="py-24 px-6 max-w-7xl mx-auto border-t border-slate-100">
+      <section id="blog" className="py-16 md:py-24 px-4 sm:px-6 max-w-7xl mx-auto border-t border-slate-100">
         <div className="flex justify-between items-end mb-16 px-4">
           <div><h3 className="text-4xl font-black uppercase tracking-tighter text-slate-900">Novedades</h3><p className="text-slate-400 font-bold mt-1 uppercase text-xs">Salud Bucal y Prevención</p></div>
           <BookOpen className="text-[#dbac43]/30 hidden md:block" size={60} />
@@ -361,15 +361,15 @@ function Home({ servicios, articulos, casos, config }) {
       {selectedArticle && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-[#414242]/90 backdrop-blur-sm" onClick={() => setSelectedArticle(null)}></div>
-          <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[3.5rem] shadow-2xl relative overflow-hidden flex flex-col">
-            <button className="absolute top-8 right-8 z-20 bg-white/90 p-3 rounded-full shadow-lg text-[#414242]" onClick={() => setSelectedArticle(null)}><X size={24} /></button>
+          <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-[2rem] md:rounded-[3.5rem] shadow-2xl relative overflow-hidden flex flex-col">
+            <button className="absolute top-4 right-4 md:top-8 md:right-8 z-20 bg-white/90 p-2.5 md:p-3 rounded-full shadow-lg text-[#414242]" onClick={() => setSelectedArticle(null)}><X size={22} /></button>
             <div className="overflow-y-auto">
-              {selectedArticle?.imagen_url && <img src={selectedArticle.imagen_url} className="w-full h-80 object-cover" alt="" />}
-              <div className="p-12 md:p-20">
+              {selectedArticle?.imagen_url && <img src={selectedArticle.imagen_url} className="w-full h-56 md:h-80 object-cover" alt="" />}
+              <div className="p-6 sm:p-8 md:p-20">
                 <p className="text-xs font-black text-[#dbac43] uppercase tracking-widest mb-4">{selectedArticle?.fecha ? new Date(selectedArticle.fecha).toLocaleDateString() : ''}</p>
-                <h2 className="text-4xl md:text-5xl font-black mb-6 leading-none text-[#414242]">{selectedArticle?.titulo || ''}</h2>
-                <p className="text-xl font-medium text-[#414242]/60 mb-10 italic border-l-4 border-[#dbac43] pl-4">{selectedArticle?.resumen || ''}</p>
-                <div className="space-y-8 text-[#414242]/80 text-lg leading-relaxed font-medium">
+                <h2 className="text-2xl sm:text-3xl md:text-5xl font-black mb-6 leading-tight md:leading-none text-[#414242]">{selectedArticle?.titulo || ''}</h2>
+                <p className="text-base md:text-xl font-medium text-[#414242]/60 mb-8 md:mb-10 italic border-l-4 border-[#dbac43] pl-4">{selectedArticle?.resumen || ''}</p>
+                <div className="space-y-6 md:space-y-8 text-[#414242]/80 text-base md:text-lg leading-relaxed font-medium">
                   {selectedArticle?.contenido ? selectedArticle.contenido.split('\n').map((parrafo, i) => <p key={i}>{parrafo}</p>) : <p>Cargando información...</p>}
                 </div>
               </div>
@@ -379,9 +379,9 @@ function Home({ servicios, articulos, casos, config }) {
       )}
 
       {/* RESERVA ORIGINAL */}
-      <section id="reserva" className="py-24 px-6 bg-slate-100">
-        <div className="max-w-4xl mx-auto bg-white p-12 md:p-20 rounded-[4rem] shadow-2xl border border-slate-50 relative overflow-hidden mb-16">
-          <h3 className="text-4xl font-black text-center mb-12 uppercase tracking-tighter">Reserva tu cita hoy</h3>
+      <section id="reserva" className="py-16 md:py-24 px-4 sm:px-6 bg-slate-100">
+        <div className="max-w-4xl mx-auto bg-white p-6 sm:p-8 md:p-20 rounded-[2.25rem] md:rounded-[4rem] shadow-2xl border border-slate-50 relative overflow-hidden mb-12 md:mb-16">
+          <h3 className="text-3xl md:text-4xl font-black text-center mb-8 md:mb-12 uppercase tracking-tighter">Reserva tu cita hoy</h3>
           <form onSubmit={handleFormSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
             <input type="text" placeholder="Nombre completo" required className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium" onChange={(e) => setFormData({ ...formData, nombre: e.target.value })} value={formData.nombre} />
             <input type="tel" placeholder="Celular" required className="w-full p-6 rounded-2xl bg-slate-50 outline-none focus:ring-2 focus:ring-[#dbac43] font-medium" onChange={(e) => setFormData({ ...formData, telefono: e.target.value })} value={formData.telefono} />
