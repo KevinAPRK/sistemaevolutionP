@@ -64,7 +64,7 @@ function Dashboard() {
     try {
       const [resConsultas, resConfig, resCasos, resBlog, resTestimonios, resMedicos] = await Promise.all([
         supabase.from('consultas').select('*').order('created_at', { ascending: false }),
-        supabase.from('configuracion').select('*').eq('id', 1).single(),
+        supabase.from('configuracion').select('*').eq('id', 1).limit(1),
         supabase.from('casos-clinicos').select('*').order('created_at', { ascending: false }),
         supabase.from('blog').select('*').order('fecha', { ascending: false }),
         supabase.from('testimonios').select('*').order('created_at', { ascending: false }),
@@ -75,7 +75,7 @@ function Dashboard() {
       if (resConsultas.data) setConsultas(resConsultas.data);
 
       if (resConfig.error) console.error('Error fetching configuracion:', resConfig.error);
-      if (resConfig.data) setConfig(resConfig.data);
+      if (resConfig.data?.[0]) setConfig(resConfig.data[0]);
 
       if (resCasos.error) console.error('Error fetching casos-clinicos:', resCasos.error);
       if (resCasos.data) setCasos(resCasos.data);

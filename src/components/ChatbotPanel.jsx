@@ -5,27 +5,57 @@ import { supabase } from '../lib/supabaseClient';
 export default function ChatbotPanel({ config, isChatOpen, setIsChatOpen }) {
   const [chatResponse, setChatResponse] = useState(null);
   const [remoteConfig, setRemoteConfig] = useState(null);
+  const hasValidConfig = Boolean(
+    config?.telefono ||
+    config?.direccion ||
+    config?.horario_semana ||
+    config?.horario_sabado ||
+    config?.mensaje_bot
+  );
 
   useEffect(() => {
-    const hasValidConfig = Boolean(
-      config?.telefono ||
-      config?.direccion ||
-      config?.horario_semana ||
-      config?.horario_sabado ||
-      config?.mensaje_bot
-    );
-
     if (hasValidConfig) return;
 
     const fetchConfig = async () => {
-      const { data, error } = await supabase.from('configuracion').select('*').eq('id', 1).single();
-      if (!error && data) setRemoteConfig(data);
+      const { data, error } = await supabase
+        .from('configuracion')
+        .select('*')
+        .eq('id', 1)
+        .limit(1);
+
+      if (error) {
+        console.error('Error loading configuracion for chatbot:', error);
+        return;
+      }
+
+      const firstById = data?.[0] || null;
+
+      if (!firstById) {
+        const { data: fallbackRows, error: fallbackError } = await supabase
+          .from('configuracion')
+          .select('*')
+          .order('id', { ascending: true })
+          .limit(1);
+
+        if (fallbackError) {
+          console.error('Error loading fallback configuracion for chatbot:', fallbackError);
+          return;
+        }
+
+        setRemoteConfig(fallbackRows?.[0] || null);
+        return;
+      }
+
+      setRemoteConfig(firstById);
     };
 
     fetchConfig();
-  }, [config]);
+  }, [hasValidConfig]);
 
-  const effectiveConfig = useMemo(() => config || remoteConfig || {}, [config, remoteConfig]);
+  const effectiveConfig = useMemo(() => {
+    if (hasValidConfig) return config;
+    return remoteConfig || {};
+  }, [hasValidConfig, config, remoteConfig]);
   const phone = effectiveConfig?.telefono || '51969826870';
   const locationText = effectiveConfig?.direccion || 'Información no disponible por el momento';
   const weekdayHours = effectiveConfig?.horario_semana || 'Información no disponible';

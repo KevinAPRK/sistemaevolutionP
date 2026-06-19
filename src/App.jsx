@@ -49,8 +49,8 @@ function App() {
         const { data: mData } = await supabase.from('medicos').select('*').order('created_at', { ascending: true });
         if (mData) setMedicos(mData);
 
-        const { data: configData } = await supabase.from('configuracion').select('*').eq('id', 1).single();
-        if (configData) setConfig(configData);
+        const { data: configRows } = await supabase.from('configuracion').select('*').eq('id', 1).limit(1);
+        if (configRows?.[0]) setConfig(configRows[0]);
 
         await fetchTestimonios();
       } catch (err) { console.error("Error sincronizando datos:", err); }

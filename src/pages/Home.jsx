@@ -16,8 +16,8 @@ function PageWrapper({ children, config }) {
 
   useEffect(() => {
     const fetchConfig = async () => {
-      const { data, error } = await supabase.from('configuracion').select('*').eq('id', 1).single();
-      if (!error && data) setPageConfig(data);
+      const { data, error } = await supabase.from('configuracion').select('*').eq('id', 1).limit(1);
+      if (!error && data?.[0]) setPageConfig(data[0]);
     };
 
     if (!pageConfig) fetchConfig();

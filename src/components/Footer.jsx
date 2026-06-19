@@ -14,16 +14,41 @@ export default function Footer({ config }) {
     }
 
     const fetchConfig = async () => {
-      const { data, error } = await supabase.from('configuracion').select('*').eq('id', 1).single();
+      const { data, error } = await supabase
+        .from('configuracion')
+        .select('*')
+        .eq('id', 1)
+        .limit(1);
+
       if (error) {
         console.error('Error loading configuracion:', error);
         return;
       }
-      setSiteConfig(data || null);
+
+      const firstById = data?.[0] || null;
+
+      // Fallback when id=1 is missing but there is at least one configuration row.
+      if (!firstById) {
+        const { data: fallbackRows, error: fallbackError } = await supabase
+          .from('configuracion')
+          .select('*')
+          .order('id', { ascending: true })
+          .limit(1);
+
+        if (fallbackError) {
+          console.error('Error loading fallback configuracion:', fallbackError);
+          return;
+        }
+
+        setSiteConfig(fallbackRows?.[0] || null);
+        return;
+      }
+
+      setSiteConfig(firstById);
     };
 
     fetchConfig();
-  }, [config]);
+  }, [config?.telefono, config?.email, config?.direccion]);
 
   return (
     <footer className="bg-[#414242] pt-14 md:pt-20 pb-10 text-[#c9c8c6] border-t-8 border-[#dbac43]">
