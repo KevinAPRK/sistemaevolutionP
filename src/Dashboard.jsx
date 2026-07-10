@@ -48,16 +48,39 @@ function Dashboard() {
   const [editingBlogId, setEditingBlogId] = useState(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+
+      if (!isMounted) return;
+
       if (!session) {
-        navigate('/login'); 
+        navigate('/login', { replace: true });
+        return;
+      }
+
+      setUser(session.user);
+      fetchData();
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!isMounted) return;
+
+      if (!session) {
+        setUser(null);
+        navigate('/login', { replace: true });
       } else {
         setUser(session.user);
-        fetchData();
       }
-    };
+    });
+
     checkUser();
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const fetchData = async () => {
